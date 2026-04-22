@@ -1,4 +1,4 @@
-# Quiniela Mundial 2026 - Explicacion del Proyecto
+# Quiniela Mundial - Explicacion del Proyecto
 
 ## Que es
 
@@ -126,4 +126,4 @@ Administrar partidos ──► Bloquear partido ──► Ingresar resultado ─
 
 ## Resumen Ejecutivo
 
-> Es una quiniela web donde los empleados/participantes predicen resultados del Mundial 2026. Cada quien pone su marcador antes de cada partido, y cuando el admin ingresa el resultado real, el sistema asigna puntos automaticamente. Todo se refleja en un leaderboard en tiempo real. La app soporta login con Google o email, tiene un panel de administracion para gestionar partidos y puntos, y esta construida con tecnologias modernas (Next.js, React, TypeScript, SQLite).
+> Es una quiniela web donde los empleados/participantes predicen resultados del Mundial. Cada quien pone su marcador antes de cada partido, y cuando el admin ingresa el resultado real, el sistema asigna puntos automaticamente. Todo se refleja en un leaderboard en tiempo real. La app soporta login con Google o email, tiene un panel de administracion para gestionar partidos y puntos, y esta construida con tecnologias modernas (Next.js, React, TypeScript, SQLite).

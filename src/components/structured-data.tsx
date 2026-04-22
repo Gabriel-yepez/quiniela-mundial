@@ -2,9 +2,9 @@ export function StructuredData() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Quiniela Mundial 2026",
+    name: "Quiniela Mundial",
     description:
-      "Predice los resultados de los 104 partidos del Mundial de Futbol 2026 y compite contra otros jugadores.",
+      "Predice los resultados de los 104 partidos del Mundial de Futbol y compite contra otros jugadores.",
     applicationCategory: "GameApplication",
     operatingSystem: "Web",
     offers: {
