@@ -1,3 +1,49 @@
+## Quiniela Mundial
+
+Aplicacion de quiniela del Mundial construida con Next.js + Prisma + PostgreSQL (Supabase).
+
+## Configuracion de Supabase (Pooler)
+
+1. Copia el archivo de ejemplo y completa tus credenciales:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Configura estas variables:
+
+- `DATABASE_URL`: URL del pooler de Supabase (runtime app).
+- `DIRECT_URL`: URL para Prisma CLI con params `sslmode=require&sslaccept=accept_invalid_certs&pgbouncer=true`.
+
+Ejemplo:
+
+```env
+DATABASE_URL="postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres"
+DIRECT_URL="postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?sslmode=require&sslaccept=accept_invalid_certs&pgbouncer=true"
+```
+
+3. Instala dependencias y genera Prisma client:
+
+```bash
+npm install
+npx prisma generate
+```
+
+4. (Opcional) Inicializa datos:
+
+```bash
+npm run seed
+```
+
+## Verificacion recomendada
+
+```bash
+npm run lint
+npm run build
+```
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

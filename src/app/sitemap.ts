@@ -3,11 +3,16 @@ import { prisma } from "@/lib/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://quiniela-mundial.vercel.app";
+  let matches: { id: string; dateTime: Date }[] = [];
 
-  const matches = await prisma.match.findMany({
-    select: { id: true, dateTime: true },
-    orderBy: { matchNumber: "asc" },
-  });
+  try {
+    matches = await prisma.match.findMany({
+      select: { id: true, dateTime: true },
+      orderBy: { matchNumber: "asc" },
+    });
+  } catch {
+    matches = [];
+  }
 
   const staticPages: MetadataRoute.Sitemap = [
     {
