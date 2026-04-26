@@ -3,11 +3,6 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id || session.user.role !== "admin") {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
   const config = await prisma.scoringConfig.findFirst();
   return NextResponse.json(config);
 }
