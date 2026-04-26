@@ -79,7 +79,7 @@ export default function RulesPage() {
     <div ref={containerRef} className="mx-auto max-w-3xl px-4 py-10 space-y-10">
       {/* Hero */}
       <div className="rules-hero text-center space-y-3 opacity-0">
-        <h1 className="text-3xl sm:text-4xl font-bold text-blue-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight">
           Reglas de la Quiniela
         </h1>
         <p className="text-muted-foreground max-w-xl mx-auto">
@@ -90,15 +90,15 @@ export default function RulesPage() {
 
       {/* Como funciona */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-blue-900">
+        <h2 className="text-xl font-semibold text-zinc-900">
           Como funciona
         </h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Card className="rules-card opacity-0 border-blue-100">
+          <Card className="rules-card opacity-0 border-zinc-200 bg-white">
             <CardContent className="p-5 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-900 font-bold text-sm">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-900 text-white font-bold text-sm">
                   1
                 </span>
                 <h3 className="font-semibold">Registrate</h3>
@@ -110,10 +110,10 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="rules-card opacity-0 border-blue-100">
+          <Card className="rules-card opacity-0 border-zinc-200 bg-white">
             <CardContent className="p-5 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-900 font-bold text-sm">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-900 text-white font-bold text-sm">
                   2
                 </span>
                 <h3 className="font-semibold">Haz tus predicciones</h3>
@@ -126,10 +126,10 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="rules-card opacity-0 border-blue-100">
+          <Card className="rules-card opacity-0 border-zinc-200 bg-white">
             <CardContent className="p-5 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-900 font-bold text-sm">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-900 text-white font-bold text-sm">
                   3
                 </span>
                 <h3 className="font-semibold">Espera los resultados</h3>
@@ -142,10 +142,10 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="rules-card opacity-0 border-blue-100">
+          <Card className="rules-card opacity-0 border-zinc-200 bg-white">
             <CardContent className="p-5 space-y-2">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-900 font-bold text-sm">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-900 text-white font-bold text-sm">
                   4
                 </span>
                 <h3 className="font-semibold">Revisa el ranking</h3>
@@ -162,14 +162,14 @@ export default function RulesPage() {
 
       {/* Sistema de puntos */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-blue-900">
+        <h2 className="text-xl font-semibold text-zinc-900">
           Sistema de puntos
         </h2>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card className="points-card opacity-0 border-emerald-200 bg-emerald-50/50">
+          <Card className="points-card opacity-0 border-zinc-300 bg-zinc-50">
             <CardContent className="p-5 text-center space-y-2">
-              <div className="text-4xl font-bold text-emerald-600">
+              <div className="text-4xl font-bold text-zinc-900">
                 {config.exactScore}
               </div>
               <div className="text-sm font-semibold">Marcador exacto</div>
@@ -180,9 +180,9 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="points-card opacity-0 border-blue-200 bg-blue-50/50">
+          <Card className="points-card opacity-0 border-zinc-200 bg-white">
             <CardContent className="p-5 text-center space-y-2">
-              <div className="text-4xl font-bold text-blue-600">
+              <div className="text-4xl font-bold text-zinc-800">
                 {config.correctWinner}
               </div>
               <div className="text-sm font-semibold">Ganador correcto</div>
@@ -192,9 +192,9 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="points-card opacity-0 border-amber-200 bg-amber-50/50">
+          <Card className="points-card opacity-0 border-zinc-200 bg-zinc-100/70">
             <CardContent className="p-5 text-center space-y-2">
-              <div className="text-4xl font-bold text-amber-600">
+              <div className="text-4xl font-bold text-zinc-700">
                 {config.correctDraw}
               </div>
               <div className="text-sm font-semibold">Empate correcto</div>
@@ -206,9 +206,9 @@ export default function RulesPage() {
           </Card>
         </div>
 
-        <Card className="border-red-200 bg-red-50/30">
+        <Card className="border-zinc-300 bg-zinc-50">
           <CardContent className="p-4 flex items-center gap-3">
-            <Badge variant="destructive" className="shrink-0">
+            <Badge className="shrink-0 bg-zinc-200 text-zinc-900 hover:bg-zinc-200 border border-zinc-300">
               0 pts
             </Badge>
             <p className="text-sm text-muted-foreground">
@@ -221,11 +221,11 @@ export default function RulesPage() {
 
       {/* Ejemplos */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-blue-900">
+        <h2 className="text-xl font-semibold text-zinc-900">
           Ejemplos
         </h2>
 
-        <Card className="border-blue-100">
+        <Card className="border-zinc-200 bg-white">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -242,7 +242,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">2 - 1</td>
                     <td className="p-3 font-mono">2 - 1</td>
                     <td className="p-3">
-                      <Badge className="bg-emerald-600">+{config.exactScore}</Badge>
+                      <Badge className="bg-zinc-900 text-white">+{config.exactScore}</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Marcador exacto
@@ -252,7 +252,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">3 - 1</td>
                     <td className="p-3 font-mono">2 - 0</td>
                     <td className="p-3">
-                      <Badge className="bg-blue-600">+{config.correctWinner}</Badge>
+                      <Badge className="bg-zinc-700 text-white">+{config.correctWinner}</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Gano el local en ambos casos
@@ -262,7 +262,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">0 - 2</td>
                     <td className="p-3 font-mono">1 - 3</td>
                     <td className="p-3">
-                      <Badge className="bg-blue-600">+{config.correctWinner}</Badge>
+                      <Badge className="bg-zinc-700 text-white">+{config.correctWinner}</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Gano el visitante en ambos casos
@@ -272,7 +272,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">1 - 1</td>
                     <td className="p-3 font-mono">0 - 0</td>
                     <td className="p-3">
-                      <Badge className="bg-amber-600">+{config.correctDraw}</Badge>
+                      <Badge className="bg-zinc-500 text-white">+{config.correctDraw}</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Ambos son empate, diferente marcador
@@ -282,7 +282,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">0 - 0</td>
                     <td className="p-3 font-mono">0 - 0</td>
                     <td className="p-3">
-                      <Badge className="bg-emerald-600">+{config.exactScore}</Badge>
+                      <Badge className="bg-zinc-900 text-white">+{config.exactScore}</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Marcador exacto (incluye empates)
@@ -292,7 +292,7 @@ export default function RulesPage() {
                     <td className="p-3 font-mono">2 - 0</td>
                     <td className="p-3 font-mono">0 - 1</td>
                     <td className="p-3">
-                      <Badge variant="destructive">0</Badge>
+                      <Badge className="bg-zinc-200 text-zinc-900 hover:bg-zinc-200 border border-zinc-300">0</Badge>
                     </td>
                     <td className="p-3 text-muted-foreground">
                       Predijiste local, gano visitante
@@ -307,12 +307,12 @@ export default function RulesPage() {
 
       {/* Estados del partido */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-blue-900">
+        <h2 className="text-xl font-semibold text-zinc-900">
           Estados de un partido
         </h2>
 
         <div className="space-y-3">
-          <Card className="rules-card border-blue-100">
+          <Card className="rules-card border-zinc-200 bg-white">
             <CardContent className="p-4 flex items-start gap-3">
               <Badge variant="secondary" className="mt-0.5 shrink-0">
                 Programado
@@ -324,9 +324,9 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="rules-card border-blue-100">
+          <Card className="rules-card border-zinc-200 bg-white">
             <CardContent className="p-4 flex items-start gap-3">
-              <Badge variant="destructive" className="mt-0.5 shrink-0">
+              <Badge className="mt-0.5 shrink-0 bg-zinc-800 text-white hover:bg-zinc-800">
                 Bloqueado
               </Badge>
               <p className="text-sm text-muted-foreground">
@@ -336,9 +336,9 @@ export default function RulesPage() {
             </CardContent>
           </Card>
 
-          <Card className="rules-card border-blue-100">
+          <Card className="rules-card border-zinc-200 bg-white">
             <CardContent className="p-4 flex items-start gap-3">
-              <Badge className="mt-0.5 shrink-0">
+              <Badge className="mt-0.5 shrink-0 bg-zinc-900 text-white hover:bg-zinc-900">
                 Finalizado
               </Badge>
               <p className="text-sm text-muted-foreground">
@@ -352,43 +352,43 @@ export default function RulesPage() {
 
       {/* Tips */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-blue-900">
+        <h2 className="text-xl font-semibold text-zinc-900">
           Consejos
         </h2>
 
-        <Card className="border-blue-200 bg-blue-50/30">
+        <Card className="border-zinc-200 bg-zinc-50">
           <CardContent className="p-5 space-y-3">
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5 shrink-0">&#9679;</span>
+                <span className="text-zinc-500 mt-0.5 shrink-0">&#9679;</span>
                 <span>
                   Intenta predecir el marcador exacto siempre que puedas, ya
                   que otorga la mayor cantidad de puntos.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5 shrink-0">&#9679;</span>
+                <span className="text-zinc-500 mt-0.5 shrink-0">&#9679;</span>
                 <span>
                   Si no estas seguro del marcador, al menos intenta acertar
                   al ganador para obtener puntos parciales.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5 shrink-0">&#9679;</span>
+                <span className="text-zinc-500 mt-0.5 shrink-0">&#9679;</span>
                 <span>
                   No olvides hacer tu prediccion antes de que el partido sea
                   bloqueado, ya que despues no podras modificarla.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5 shrink-0">&#9679;</span>
+                <span className="text-zinc-500 mt-0.5 shrink-0">&#9679;</span>
                 <span>
                   Puedes cambiar tu prediccion cuantas veces quieras mientras
                   el partido siga en estado &quot;Programado&quot;.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5 shrink-0">&#9679;</span>
+                <span className="text-zinc-500 mt-0.5 shrink-0">&#9679;</span>
                 <span>
                   Revisa el ranking frecuentemente para ver tu posicion y
                   motivarte a seguir participando.

@@ -210,9 +210,9 @@ export default function SignInPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4">
-      <Card className="w-full max-w-sm border-blue-100">
+      <Card className="w-full max-w-sm border-zinc-200 bg-white shadow-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-blue-900">
+          <CardTitle className="text-2xl text-zinc-900">
             {titles[mode]}
           </CardTitle>
           <p className="text-sm text-muted-foreground">{descriptions[mode]}</p>
@@ -253,7 +253,7 @@ export default function SignInPage() {
                   type="email"
                   value={form.email}
                   disabled
-                  className="bg-muted"
+                  className="bg-zinc-100 border-zinc-200 text-zinc-600"
                 />
               </div>
             )}
@@ -264,7 +264,7 @@ export default function SignInPage() {
                   type="email"
                   value={form.email}
                   disabled
-                  className="bg-muted"
+                  className="bg-zinc-100 border-zinc-200 text-zinc-600"
                 />
               </div>
             )}
@@ -312,7 +312,7 @@ export default function SignInPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-700 text-white hover:bg-blue-600"
+              className="w-full bg-zinc-900 text-white hover:bg-zinc-800"
             >
               {loading ? "Cargando..." : buttonLabels[mode]}
             </Button>
@@ -326,7 +326,7 @@ export default function SignInPage() {
                   setMode("signin");
                   setForm({ name: "", email: "", password: "", confirmPassword: "" });
                 }}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-sm text-zinc-700 hover:text-zinc-900 hover:underline"
               >
                 Volver a iniciar sesion
               </button>
@@ -341,7 +341,7 @@ export default function SignInPage() {
                   onClick={() =>
                     setMode(mode === "register" ? "signin" : "register")
                   }
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-zinc-700 hover:text-zinc-900 hover:underline"
                 >
                   {mode === "register"
                     ? "Ya tienes cuenta? Inicia sesion"
@@ -354,7 +354,7 @@ export default function SignInPage() {
                       setMode("forgot-password");
                       setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
                     }}
-                    className="text-sm text-muted-foreground hover:text-blue-600 hover:underline"
+                    className="text-sm text-muted-foreground hover:text-zinc-800 hover:underline"
                   >
                     Olvidaste tu contraseña?
                   </button>

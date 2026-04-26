@@ -41,10 +41,10 @@ export default async function PredictionsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-blue-900">Mis Predicciones</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Mis Predicciones</h1>
         <div className="text-right">
           <p className="text-sm text-muted-foreground">Total</p>
-          <p className="text-2xl font-bold">{totalPoints} pts</p>
+          <p className="text-2xl font-semibold text-zinc-900">{totalPoints} pts</p>
         </div>
       </div>
 

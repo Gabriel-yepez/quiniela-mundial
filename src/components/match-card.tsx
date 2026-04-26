@@ -33,7 +33,7 @@ export function MatchCard({ match, prediction }: MatchCardProps) {
 
   return (
     <Link href={`/matches/${match.id}`}>
-      <Card className="hover:shadow-md hover:shadow-blue-100 transition-shadow cursor-pointer border-blue-100">
+      <Card className="cursor-pointer border-zinc-200 bg-white transition-shadow hover:shadow-md hover:shadow-zinc-200/70">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-muted-foreground">
@@ -82,7 +82,7 @@ export function MatchCard({ match, prediction }: MatchCardProps) {
               )}
             </div>
 
-            <div className="px-3 py-1 rounded-md bg-blue-50 text-center min-w-[60px]">
+            <div className="min-w-[60px] rounded-md border border-zinc-200 bg-zinc-50 px-3 py-1 text-center">
               {isFinished ? (
                 <span className="font-bold text-lg">
                   {match.homeScore} - {match.awayScore}

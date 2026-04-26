@@ -133,7 +133,7 @@ export default function HomePage() {
 
       // Continuous pulse on countdown
       gsap.to(countdownRef.current, {
-        boxShadow: "0 0 40px rgba(29, 78, 216, 0.3)",
+        boxShadow: "0 0 42px rgba(115, 115, 115, 0.22)",
         duration: 1.5,
         repeat: -1,
         yoyo: true,
@@ -147,58 +147,67 @@ export default function HomePage() {
   return (
     <div
       ref={containerRef}
-      className="relative flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 overflow-hidden"
+      className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-50 via-white to-neutral-100 px-4"
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.95),transparent_55%),radial-gradient(circle_at_80%_15%,rgba(212,212,212,0.3),transparent_45%),radial-gradient(circle_at_50%_100%,rgba(229,229,229,0.45),transparent_55%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,rgba(163,163,163,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(163,163,163,0.08)_1px,transparent_1px)] [background-size:48px_48px]"
+      />
+
       {/* Floating particles */}
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 15 }).map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-blue-400/30"
+            className="absolute h-2 w-2 rounded-full bg-neutral-400/30"
           />
         ))}
       </div>
 
-      <div className="text-center space-y-8 max-w-lg relative z-10">
+      <div className="relative z-10 max-w-lg space-y-8 text-center">
         <h1
           ref={titleRef}
-          className="text-5xl sm:text-7xl font-bold tracking-tight text-blue-900 opacity-0"
+          className="text-5xl font-semibold tracking-[-0.035em] text-neutral-900 opacity-0 sm:text-7xl"
         >
           Quiniela Mundial
         </h1>
 
         <p
           ref={subtitleRef}
-          className="text-xl sm:text-2xl text-blue-400 font-medium opacity-0"
+          className="text-xl font-medium text-neutral-600 opacity-0 sm:text-2xl"
         >
           Quiniela del Mundial de Futbol
         </p>
 
         <div
           ref={countdownRef}
-          className="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-2xl p-8 shadow-xl"
+          className="rounded-3xl border border-white/70 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-700 p-8 text-white shadow-[0_14px_48px_-18px_rgba(10,10,10,0.6)] backdrop-blur-sm"
         >
-          <p className="text-sm text-blue-200 uppercase tracking-widest mb-4">
+          <p className="mb-4 text-sm uppercase tracking-[0.2em] text-neutral-300">
             Faltan
           </p>
           <div className="flex justify-center gap-3 sm:gap-5">
             <CountdownUnit value={timeLeft.days} label="Dias" />
-            <span className="text-3xl font-bold text-blue-300 self-start mt-1">
+            <span className="mt-1 self-start text-3xl font-bold text-neutral-300">
               :
             </span>
             <CountdownUnit value={timeLeft.hours} label="Horas" />
-            <span className="text-3xl font-bold text-blue-300 self-start mt-1">
+            <span className="mt-1 self-start text-3xl font-bold text-neutral-300">
               :
             </span>
             <CountdownUnit value={timeLeft.minutes} label="Min" />
-            <span className="text-3xl font-bold text-blue-300 self-start mt-1">
+            <span className="mt-1 self-start text-3xl font-bold text-neutral-300">
               :
             </span>
             <CountdownUnit value={timeLeft.seconds} label="Seg" />
           </div>
         </div>
 
-        <p ref={infoRef} className="text-blue-400 text-sm opacity-0">
+        <p ref={infoRef} className="text-sm text-neutral-600 opacity-0">
           11 de junio - 19 de julio, 2026 &middot; USA, Mexico y Canada
         </p>
 
@@ -207,7 +216,10 @@ export default function HomePage() {
           className="flex flex-col sm:flex-row gap-3 justify-center"
         >
           <Link href="/matches" className="action-btn opacity-0">
-            <Button size="lg" className="w-full min-w-[160px] h-12 text-base">
+            <Button
+              size="lg"
+              className="h-12 w-full min-w-[160px] border border-neutral-800 bg-neutral-900 text-base text-white hover:bg-neutral-800"
+            >
               Ver partidos
             </Button>
           </Link>
@@ -215,7 +227,7 @@ export default function HomePage() {
             <Button
               variant="outline"
               size="lg"
-              className="w-full min-w-[160px] h-12 text-base"
+              className="h-12 w-full min-w-[160px] border-neutral-300 bg-white/75 text-base text-neutral-900 hover:bg-neutral-100"
             >
               Ver ranking
             </Button>
@@ -224,7 +236,7 @@ export default function HomePage() {
             <Button
               variant="outline"
               size="lg"
-              className="w-full min-w-[160px] h-12 text-base"
+              className="h-12 w-full min-w-[160px] border-neutral-300 bg-white/75 text-base text-neutral-900 hover:bg-neutral-100"
             >
               Ver reglas
             </Button>
@@ -241,7 +253,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
       <span className="text-4xl sm:text-5xl font-bold tabular-nums leading-none">
         {String(value).padStart(2, "0")}
       </span>
-      <span className="text-xs text-blue-300 uppercase tracking-wide mt-1">
+      <span className="mt-1 text-xs uppercase tracking-wide text-neutral-300">
         {label}
       </span>
     </div>

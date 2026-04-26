@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,13 +19,13 @@ export function Navbar() {
   const showBack = pathname !== "/";
 
   return (
-    <nav className="border-b border-blue-800 bg-blue-900 text-white">
+    <nav className="border-b border-black/5 bg-white/80 text-neutral-900 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
       <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
         <div className="flex items-center gap-6">
           {showBack && (
             <button
               onClick={() => router.back()}
-              className="text-blue-200 hover:text-white transition-colors"
+              className="text-neutral-500 hover:text-neutral-900 transition-colors"
               aria-label="Volver"
             >
               <svg
@@ -43,39 +43,42 @@ export function Navbar() {
               </svg>
             </button>
           )}
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-white">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-[1.1rem] font-semibold tracking-[-0.02em] text-neutral-900"
+          >
             Quiniela Mundial
           </Link>
           {session && (
             <div className="hidden sm:flex items-center gap-4">
               <Link
                 href="/matches"
-                className="text-sm text-blue-200 hover:text-white transition-colors"
+                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
               >
                 Partidos
               </Link>
               <Link
                 href="/predictions"
-                className="text-sm text-blue-200 hover:text-white transition-colors"
+                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
               >
                 Mis Predicciones
               </Link>
               <Link
                 href="/leaderboard"
-                className="text-sm text-blue-200 hover:text-white transition-colors"
+                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
               >
                 Ranking
               </Link>
               <Link
                 href="/rules"
-                className="text-sm text-blue-200 hover:text-white transition-colors"
+                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
               >
                 Reglas
               </Link>
               {session.user.role === "admin" && (
                 <Link
                   href="/admin"
-                  className="text-sm text-blue-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
                 >
                   Admin
                 </Link>
@@ -138,7 +141,7 @@ export function Navbar() {
             <Link href="/sign-in">
               <Button
                 size="sm"
-                className="bg-blue-900 border-white border text-white hover:bg-blue-800 text-base px-6 py-4"
+                className="border border-neutral-300 bg-gradient-to-b from-white to-neutral-100 text-neutral-900 hover:from-neutral-50 hover:to-neutral-200 text-base px-6 py-4 shadow-sm"
               >
                 Iniciar sesion
               </Button>

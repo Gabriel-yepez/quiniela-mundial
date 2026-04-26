@@ -62,7 +62,7 @@ export default async function MatchesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-blue-900">Partidos</h1>
+      <h1 className="mb-6 text-3xl font-semibold tracking-tight text-zinc-900">Partidos</h1>
 
       <Tabs defaultValue={groups[0] ?? "A"}>
         <TabsList className="flex flex-wrap h-auto gap-1 mb-6">

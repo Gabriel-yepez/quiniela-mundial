@@ -67,7 +67,9 @@ export default async function MatchDetailPage({
     <div className="mx-auto max-w-xl px-4 py-8 space-y-6">
       <div className="text-center space-y-2">
         {match.group && (
-          <Badge variant="outline">Grupo {match.group}</Badge>
+          <Badge variant="outline" className="border-zinc-200 bg-zinc-50 text-zinc-700">
+            Grupo {match.group}
+          </Badge>
         )}
         <p className="text-sm text-muted-foreground">
           {date.toLocaleDateString("es-MX", {
@@ -99,13 +101,13 @@ export default async function MatchDetailPage({
           </p>
         </div>
 
-        <div className="px-4 py-2 rounded-lg bg-muted text-center">
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2 text-center">
           {isFinished ? (
-            <span className="text-3xl font-bold">
+            <span className="text-3xl font-semibold text-zinc-900">
               {match.homeScore} - {match.awayScore}
             </span>
           ) : (
-            <span className="text-xl text-muted-foreground">vs</span>
+            <span className="text-xl text-zinc-500">vs</span>
           )}
         </div>
 
@@ -127,7 +129,7 @@ export default async function MatchDetailPage({
       </div>
 
       {isFinished && (
-        <Badge className="mx-auto block w-fit" variant="secondary">
+        <Badge className="mx-auto block w-fit border border-zinc-200 bg-zinc-100 text-zinc-700" variant="secondary">
           Partido finalizado
         </Badge>
       )}
@@ -144,7 +146,7 @@ export default async function MatchDetailPage({
       )}
 
       {prediction && isFinished && (
-        <div className="text-center p-4 rounded-lg bg-muted space-y-1">
+        <div className="space-y-1 rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-center">
           <p className="text-sm text-muted-foreground">
             Tu prediccion: {prediction.homeScore} - {prediction.awayScore}
           </p>

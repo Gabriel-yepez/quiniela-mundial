@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Predice los resultados del Mundial de Futbol y compite contra amigos.",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#1e3a5f",
+    background_color: "#f8f8f8",
+    theme_color: "#111111",
     icons: [
       {
         src: "/favicon.ico",

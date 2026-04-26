@@ -33,17 +33,17 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       toastOptions={{
         classNames: {
-          toast: "cn-toast !py-4 !px-5 !text-sm !font-medium !shadow-lg !border-l-4",
+          toast: "cn-toast !py-4 !px-5 !text-sm !font-medium !shadow-md !border-l-2 !rounded-xl",
           success:
-            "!bg-emerald-50 !text-emerald-900 !border-l-emerald-500 !border-emerald-200 dark:!bg-emerald-950 dark:!text-emerald-100 dark:!border-emerald-700 dark:!border-l-emerald-400",
+            "!bg-zinc-50 !text-zinc-900 !border-zinc-200 !border-l-zinc-900 dark:!bg-zinc-900 dark:!text-zinc-100 dark:!border-zinc-700 dark:!border-l-zinc-300",
           error:
-            "!bg-red-50 !text-red-900 !border-l-red-500 !border-red-200 dark:!bg-red-950 dark:!text-red-100 dark:!border-red-700 dark:!border-l-red-400",
+            "!bg-zinc-100 !text-zinc-900 !border-zinc-300 !border-l-zinc-700 dark:!bg-zinc-900 dark:!text-zinc-100 dark:!border-zinc-700 dark:!border-l-zinc-400",
           warning:
-            "!bg-amber-50 !text-amber-900 !border-l-amber-500 !border-amber-200 dark:!bg-amber-950 dark:!text-amber-100 dark:!border-amber-700 dark:!border-l-amber-400",
+            "!bg-zinc-50 !text-zinc-800 !border-zinc-300 !border-l-zinc-500 dark:!bg-zinc-900 dark:!text-zinc-200 dark:!border-zinc-700 dark:!border-l-zinc-500",
           info:
-            "!bg-blue-50 !text-blue-900 !border-l-blue-500 !border-blue-200 dark:!bg-blue-950 dark:!text-blue-100 dark:!border-blue-700 dark:!border-l-blue-400",
+            "!bg-white !text-zinc-900 !border-zinc-200 !border-l-zinc-400 dark:!bg-zinc-950 dark:!text-zinc-100 dark:!border-zinc-800 dark:!border-l-zinc-500",
           title: "!text-sm !font-semibold",
-          description: "!text-xs !text-gray-500 dark:!text-gray-400",
+          description: "!text-xs !text-zinc-500 dark:!text-zinc-400",
         },
       }}
       style={
