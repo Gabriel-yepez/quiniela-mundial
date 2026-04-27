@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PredictionForm } from "@/components/prediction-form";
 
@@ -26,6 +27,9 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: {
+      canonical: `/matches/${matchId}`,
+    },
     openGraph: {
       title: `${title} — Quiniela Mundial`,
       description,
@@ -87,10 +91,12 @@ export default async function MatchDetailPage({
       <div className="flex items-center justify-center gap-6 py-4">
         <div className="text-center space-y-2">
           {match.homeTeam?.flagUrl && (
-            <img
+            <Image
               src={match.homeTeam.flagUrl}
-              alt={match.homeTeam.code}
-              className="w-12 h-9 object-cover rounded shadow-sm mx-auto"
+              alt={match.homeTeam.name ?? match.homeTeam.code}
+              width={48}
+              height={36}
+              className="object-cover rounded shadow-sm mx-auto"
             />
           )}
           <p className="text-2xl font-bold">
@@ -113,10 +119,12 @@ export default async function MatchDetailPage({
 
         <div className="text-center space-y-2">
           {match.awayTeam?.flagUrl && (
-            <img
+            <Image
               src={match.awayTeam.flagUrl}
-              alt={match.awayTeam.code}
-              className="w-12 h-9 object-cover rounded shadow-sm mx-auto"
+              alt={match.awayTeam.name ?? match.awayTeam.code}
+              width={48}
+              height={36}
+              className="object-cover rounded shadow-sm mx-auto"
             />
           )}
           <p className="text-2xl font-bold">
