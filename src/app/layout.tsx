@@ -37,6 +37,9 @@ export const metadata: Metadata = {
     "copa del mundo",
   ],
   authors: [{ name: "Legendsoft" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "es_MX",

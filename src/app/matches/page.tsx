@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Partidos",
   description:
     "Consulta los 104 partidos del Mundial: fase de grupos, octavos, cuartos, semifinales y la gran final. Haz tus predicciones antes de que cierren.",
+  alternates: {
+    canonical: "/matches",
+  },
   openGraph: {
     title: "Partidos — Quiniela Mundial",
     description:

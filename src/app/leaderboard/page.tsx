@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Ranking",
   description:
     "Tabla de posiciones de la quiniela del Mundial. Consulta quien lidera la clasificacion y cuantos puntos llevas acumulados.",
+  alternates: {
+    canonical: "/leaderboard",
+  },
   openGraph: {
     title: "Ranking — Quiniela Mundial",
     description:
