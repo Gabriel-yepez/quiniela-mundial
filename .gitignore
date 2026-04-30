@@ -48,3 +48,7 @@ prisma/dev.db-journal
 
 # local git worktrees
 .worktrees/
+
+# local brainstorming companion
+.superpowers/
+docs/
