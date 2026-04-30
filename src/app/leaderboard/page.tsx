@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 
 export default function LeaderboardPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-3xl font-semibold tracking-tight text-zinc-900">Ranking</h1>
+    <div className="mx-auto min-h-[calc(100vh-4rem)] max-w-2xl px-4 py-8 text-white">
+      <h1 className="mb-6 text-3xl font-semibold tracking-tight text-white">Ranking</h1>
       <LeaderboardTable />
     </div>
   );

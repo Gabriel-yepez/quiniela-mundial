@@ -1,9 +1,16 @@
 "use client";
 
+import type { MouseEvent as ReactMouseEvent } from "react";
+import { useRef } from "react";
 import Link from "next/link";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { STATUS_LABELS } from "@/lib/match-constants";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface MatchCardProps {
   match: {
@@ -24,15 +31,58 @@ interface MatchCardProps {
     awayScore: number;
     points: number | null;
   } | null;
+  animationIndex?: number;
 }
 
-export function MatchCard({ match, prediction }: MatchCardProps) {
+export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardProps) {
   const isFinished = match.status === "finished";
   const isLocked = match.status === "locked";
   const date = new Date(match.dateTime);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+
+  const { contextSafe } = useGSAP(
+    () => {
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          delay: animationIndex * 0.055,
+          ease: "power3.out",
+          clearProps: "transform",
+        }
+      );
+    },
+    { scope: cardRef }
+  );
+
+  const handleMouseEnter = contextSafe((event: ReactMouseEvent<HTMLAnchorElement>) => {
+    gsap.to(event.currentTarget, {
+      y: -4,
+      duration: 0.22,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  });
+
+  const handleMouseLeave = contextSafe((event: ReactMouseEvent<HTMLAnchorElement>) => {
+    gsap.to(event.currentTarget, {
+      y: 0,
+      duration: 0.55,
+      ease: "elastic.out(1, 0.45)",
+      overwrite: "auto",
+    });
+  });
 
   return (
-    <Link href={`/matches/${match.id}`}>
+    <Link
+      ref={cardRef}
+      href={`/matches/${match.id}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Card className="cursor-pointer border-zinc-200 bg-white transition-shadow hover:shadow-md hover:shadow-zinc-200/70">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">

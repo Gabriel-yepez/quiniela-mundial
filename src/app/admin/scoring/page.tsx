@@ -62,9 +62,9 @@ export default function ScoringPage() {
   }
 
   return (
-    <Card className="max-w-md">
+    <Card className="max-w-md border-white/12 bg-white/10 text-white backdrop-blur-sm">
       <CardHeader>
-        <CardTitle>Configuracion de Puntos</CardTitle>
+        <CardTitle className="text-white">Configuracion de Puntos</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSave} className="space-y-4">
@@ -72,7 +72,7 @@ export default function ScoringPage() {
             <Label htmlFor="exactScore">
               Marcador exacto
             </Label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               Puntos cuando el usuario acierta el marcador exacto
             </p>
             <NumberInput
@@ -86,7 +86,7 @@ export default function ScoringPage() {
             <Label htmlFor="correctWinner">
               Ganador correcto
             </Label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               Puntos cuando acierta el ganador pero no el marcador
             </p>
             <NumberInput
@@ -100,7 +100,7 @@ export default function ScoringPage() {
             <Label htmlFor="correctDraw">
               Empate correcto
             </Label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               Puntos cuando predice empate y es empate, pero diferente marcador
             </p>
             <NumberInput

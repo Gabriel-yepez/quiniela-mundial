@@ -4,15 +4,16 @@ import { CountdownTimer } from "@/components/countdown-timer";
 
 vi.mock("gsap", () => ({
   default: {
-    context: vi.fn((fn: () => void) => {
-      fn();
-      return { revert: vi.fn() };
-    }),
-    set: vi.fn(),
+    registerPlugin: vi.fn(),
     to: vi.fn(),
     fromTo: vi.fn(),
-    utils: { random: vi.fn(() => 0) },
   },
+}));
+
+vi.mock("@gsap/react", () => ({
+  useGSAP: vi.fn((fn: () => void) => {
+    fn();
+  }),
 }));
 
 describe("CountdownTimer", () => {
@@ -31,7 +32,6 @@ describe("CountdownTimer", () => {
 
   test("renders four numeric values", () => {
     render(<CountdownTimer />);
-    // Each unit shows a zero-padded 2-digit number (00–99)
     const numerals = screen.getAllByText(/^\d{2}$/);
     expect(numerals.length).toBeGreaterThanOrEqual(4);
   });

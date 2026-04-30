@@ -209,13 +209,13 @@ export default function SignInPage() {
   const showBackLink = mode === "set-password" || mode === "forgot-password" || mode === "reset-password";
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4">
-      <Card className="w-full max-w-sm border-zinc-200 bg-white shadow-sm">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
+      <Card className="w-full max-w-sm border-white/12 bg-white/10 text-white shadow-sm backdrop-blur-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-zinc-900">
+          <CardTitle className="text-2xl text-white">
             {titles[mode]}
           </CardTitle>
-          <p className="text-sm text-muted-foreground">{descriptions[mode]}</p>
+          <p className="text-sm text-white/65">{descriptions[mode]}</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -253,7 +253,7 @@ export default function SignInPage() {
                   type="email"
                   value={form.email}
                   disabled
-                  className="bg-zinc-100 border-zinc-200 text-zinc-600"
+                  className="border-white/12 bg-white/10 text-white/70"
                 />
               </div>
             )}
@@ -264,7 +264,7 @@ export default function SignInPage() {
                   type="email"
                   value={form.email}
                   disabled
-                  className="bg-zinc-100 border-zinc-200 text-zinc-600"
+                  className="border-white/12 bg-white/10 text-white/70"
                 />
               </div>
             )}
@@ -287,7 +287,7 @@ export default function SignInPage() {
                   }
                 />
                 {(mode === "set-password" || mode === "reset-password") && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-white/55">
                     Minimo 6 caracteres
                   </p>
                 )}
@@ -326,7 +326,7 @@ export default function SignInPage() {
                   setMode("signin");
                   setForm({ name: "", email: "", password: "", confirmPassword: "" });
                 }}
-                className="text-sm text-zinc-700 hover:text-zinc-900 hover:underline"
+                className="text-sm text-white/70 hover:text-white hover:underline"
               >
                 Volver a iniciar sesion
               </button>
@@ -341,7 +341,7 @@ export default function SignInPage() {
                   onClick={() =>
                     setMode(mode === "register" ? "signin" : "register")
                   }
-                  className="text-sm text-zinc-700 hover:text-zinc-900 hover:underline"
+                  className="text-sm text-white/70 hover:text-white hover:underline"
                 >
                   {mode === "register"
                     ? "Ya tienes cuenta? Inicia sesion"
@@ -354,7 +354,7 @@ export default function SignInPage() {
                       setMode("forgot-password");
                       setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
                     }}
-                    className="text-sm text-muted-foreground hover:text-zinc-800 hover:underline"
+                    className="text-sm text-white/55 hover:text-white hover:underline"
                   >
                     Olvidaste tu contraseña?
                   </button>
@@ -369,7 +369,7 @@ export default function SignInPage() {
                 type="button"
                 onClick={() => signIn("google", { callbackUrl: "/matches" })}
                 variant="outline"
-                className="w-full h-11 gap-3 p-2"
+                className="w-full h-11 gap-3 p-2 text-black"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
