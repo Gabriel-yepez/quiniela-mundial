@@ -80,6 +80,7 @@ export function PublicBackground() {
           const glowXTo = gsap.quickTo(glow, "x", { duration: 0.28, ease: "power3.out" });
           const glowYTo = gsap.quickTo(glow, "y", { duration: 0.28, ease: "power3.out" });
           let frameId: number | null = null;
+          let isPointerInside = false;
           let pendingPointer: { x: number; y: number; width: number; height: number } | null = null;
 
           const updatePoints = (localX: number, localY: number, width: number, height: number) => {
@@ -121,24 +122,9 @@ export function PublicBackground() {
             frameId = window.requestAnimationFrame(flushPointerEffect);
           };
 
-          const handlePointerMove = makeContextSafe((event: PointerEvent) => {
-            const rect = container.getBoundingClientRect();
-            const localX = event.clientX - rect.left;
-            const localY = event.clientY - rect.top;
+          const hideGlow = () => {
+            isPointerInside = false;
 
-            schedulePointerEffect(localX, localY, rect.width, rect.height);
-          });
-
-          const handlePointerEnter = makeContextSafe((event: PointerEvent) => {
-            const rect = container.getBoundingClientRect();
-            const localX = event.clientX - rect.left;
-            const localY = event.clientY - rect.top;
-
-            gsap.to(glow, { opacity: 0.75, duration: 0.24, ease: "power2.out" });
-            schedulePointerEffect(localX, localY, rect.width, rect.height);
-          });
-
-          const handlePointerLeave = makeContextSafe(() => {
             if (frameId !== null) {
               window.cancelAnimationFrame(frameId);
               frameId = null;
@@ -147,20 +133,40 @@ export function PublicBackground() {
             pendingPointer = null;
             gsap.to(glow, { opacity: 0, duration: 0.35, ease: "power2.out" });
             resetPoints();
-          });
+          };
 
-          container.addEventListener("pointerenter", handlePointerEnter);
-          container.addEventListener("pointermove", handlePointerMove);
-          container.addEventListener("pointerleave", handlePointerLeave);
+          const handlePointerMove = makeContextSafe((event: PointerEvent) => {
+            const rect = container.getBoundingClientRect();
+            const localX = event.clientX - rect.left;
+            const localY = event.clientY - rect.top;
 
-          return () => {
-            if (frameId !== null) {
-              window.cancelAnimationFrame(frameId);
+            if (localX < 0 || localY < 0 || localX > rect.width || localY > rect.height) {
+              if (isPointerInside) {
+                hideGlow();
+              }
+
+              return;
             }
 
-            container.removeEventListener("pointerenter", handlePointerEnter);
-            container.removeEventListener("pointermove", handlePointerMove);
-            container.removeEventListener("pointerleave", handlePointerLeave);
+            if (!isPointerInside) {
+              isPointerInside = true;
+              gsap.to(glow, { opacity: 0.75, duration: 0.24, ease: "power2.out" });
+            }
+
+            schedulePointerEffect(localX, localY, rect.width, rect.height);
+          });
+
+          const handleWindowPointerLeave = makeContextSafe(() => {
+            hideGlow();
+          });
+
+          window.addEventListener("pointermove", handlePointerMove);
+          window.addEventListener("pointerleave", handleWindowPointerLeave);
+
+          return () => {
+            hideGlow();
+            window.removeEventListener("pointermove", handlePointerMove);
+            window.removeEventListener("pointerleave", handleWindowPointerLeave);
           };
         },
         containerRef

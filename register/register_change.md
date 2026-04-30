@@ -4,6 +4,21 @@ Project changelog maintained automatically by OpenCode.
 
 ---
 
+## [2026-04-30 00:24] - Restauracion del glow del cursor en el fondo global
+
+**Prompt:** La animacion del cursor ya no aparece.
+**Files modified:**
+- `src/components/public-background.tsx` - seguimiento del cursor migrado a listeners globales para que el glow funcione aunque el fondo este detras del contenido de la app
+- `src/components/public-background.test.tsx` - nueva prueba de regresion para validar que el glow reacciona al movimiento global del puntero
+- `register/register_change.md` - registro actualizado con la correccion del glow
+
+**Description:**
+Se investigo primero la causa raiz antes de cambiar codigo y se confirmo que la animacion no se habia perdido por GSAP ni por estilos del glow, sino por el cambio arquitectonico que movio `PublicBackground` detras de la capa principal `z-10` en `src/app/layout.tsx`. Al quedar el fondo por debajo del resto de la UI, los eventos `pointerenter`, `pointermove` y `pointerleave` del contenedor dejaban de dispararse de forma consistente, por lo que el halo blanco nunca se activaba. Se siguio TDD agregando una prueba que fallaba al exigir que el glow reaccionara a movimiento global del puntero, y luego se ajusto `PublicBackground` para escuchar `pointermove` y `pointerleave` en `window`, calcular si el cursor esta dentro del rectangulo real del fondo y encender/apagar el glow y la reaccion de puntos con base en eso.
+
+Verificacion realizada: `npm test -- src/components/public-background.test.tsx`, `npm run lint -- src/components/public-background.tsx src/components/public-background.test.tsx` y `npm test -- src/app/layout.test.tsx "src/app/(public)/layout.test.tsx" src/components/home-hero.test.tsx src/components/public-background.test.tsx`.
+
+---
+
 ## [2026-04-30 00:12] - Restauracion de la ruta publica /matches
 
 **Prompt:** Continuar con los siguientes pasos y resolver la regresion donde la ruta `/matches` habia desaparecido.
