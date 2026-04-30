@@ -160,7 +160,7 @@ describe("apple-icon", () => {
 
 // ─── /rules page metadata ─────────────────────────────────────────────────────
 
-import { metadata as rulesMetadata } from "@/app/rules/layout";
+import { metadata as rulesMetadata } from "@/app/(public)/rules/layout";
 
 describe("/rules metadata", () => {
   test("title is 'Reglas'", () => {

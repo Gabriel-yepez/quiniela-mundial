@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
+import { PublicBackground } from "@/components/public-background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -70,12 +71,17 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-geist-sans)]">
+      <body className="min-h-full bg-[#03030f] font-[family-name:var(--font-geist-sans)] text-white">
         <StructuredData />
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Toaster />
+          <div className="relative isolate flex min-h-full flex-col">
+            <PublicBackground />
+            <div className="relative z-10 flex min-h-full flex-col">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Toaster />
+            </div>
+          </div>
         </Providers>
       </body>
     </html>

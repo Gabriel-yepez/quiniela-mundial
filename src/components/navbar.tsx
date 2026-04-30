@@ -1,8 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,14 +15,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+gsap.registerPlugin(useGSAP);
+
 export function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const showBack = pathname !== "/";
+  const navRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        navRef.current,
+        { y: -72, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.65, ease: "power3.out", delay: 0.05 }
+      );
+    },
+    { scope: navRef }
+  );
 
   return (
-    <nav className="border-b border-black/5 bg-white/80 text-neutral-900 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
+    <nav
+      ref={navRef}
+      className="border-b border-black/5 bg-white/80 text-neutral-900 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
+    >
       <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
         <div className="flex items-center gap-6">
           {showBack && (
