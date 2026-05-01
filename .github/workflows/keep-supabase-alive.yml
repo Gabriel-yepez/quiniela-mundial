@@ -1,0 +1,34 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Cada 3 dias a las 12:00 UTC. Supabase free tier pausa el proyecto despues
+    # de 7 dias sin actividad, asi que esto deja margen suficiente.
+    - cron: "0 12 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping database
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Install psql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Run keep-alive query
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::DATABASE_URL secret is not configured"
+            exit 1
+          fi
+
+          psql "$DATABASE_URL" \
+            --set=ON_ERROR_STOP=1 \
+            --no-psqlrc \
+            -c "SELECT 'keep-alive ping' AS status, now() AS ran_at, count(*) AS total_users FROM \"User\";"
