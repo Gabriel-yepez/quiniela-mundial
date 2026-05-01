@@ -27,3 +27,8 @@
 5. **`DATABASE_URL`** must be clean (no `sslmode`/`sslaccept`/`pgbouncer` params) because the app uses `pg.Pool` with explicit SSL config. Adding these params causes conflicts.
 
 6. **`DIRECT_URL`** should include `?sslmode=require&sslaccept=accept_invalid_certs&pgbouncer=true` for Prisma CLI engine commands.
+
+
+## Siempre al hacer interfaces nunca uses any
+## Cuando hagas peticiones a la api hazlo todo por api y no por server action 
+## ya la logica de negocio si hazla en server action 
