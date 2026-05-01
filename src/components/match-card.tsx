@@ -83,7 +83,7 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Card className="cursor-pointer border-zinc-200 bg-white transition-shadow hover:shadow-md hover:shadow-zinc-200/70">
+      <Card className="cursor-pointer border-zinc-300 bg-zinc-400 transition-shadow hover:shadow-md hover:shadow-zinc-300/70">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-muted-foreground">
@@ -132,7 +132,7 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
               )}
             </div>
 
-            <div className="min-w-[60px] rounded-md border border-zinc-200 bg-zinc-50 px-3 py-1 text-center">
+            <div className="min-w-[60px] rounded-md border border-zinc-300 bg-zinc-100 px-3 py-1 text-center">
               {isFinished ? (
                 <span className="font-bold text-lg">
                   {match.homeScore} - {match.awayScore}

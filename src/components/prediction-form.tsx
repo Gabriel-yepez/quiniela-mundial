@@ -68,7 +68,7 @@ export function PredictionForm({
   }
 
   return (
-    <Card>
+    <Card className="border-zinc-300 bg-zinc-400">
       <CardHeader>
         <CardTitle className="text-lg">Tu prediccion</CardTitle>
       </CardHeader>
