@@ -243,6 +243,7 @@ export default function SignInPage() {
                   placeholder="Tu nombre"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="placeholder:text-white/70"
                 />
               </div>
             )}
@@ -258,6 +259,7 @@ export default function SignInPage() {
                   onChange={(e) =>
                     setForm({ ...form, email: e.target.value })
                   }
+                  className="placeholder:text-white/70"
                 />
               </div>
             )}
@@ -300,6 +302,7 @@ export default function SignInPage() {
                   onChange={(e) =>
                     setForm({ ...form, password: e.target.value })
                   }
+                  className="placeholder:text-white/70"
                 />
                 {(mode === "set-password" || mode === "reset-password") && (
                   <p className="text-xs text-white/55">
@@ -321,6 +324,7 @@ export default function SignInPage() {
                   onChange={(e) =>
                     setForm({ ...form, confirmPassword: e.target.value })
                   }
+                  className="placeholder:text-white/70"
                 />
               </div>
             )}
