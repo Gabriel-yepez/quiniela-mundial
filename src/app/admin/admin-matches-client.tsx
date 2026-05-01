@@ -36,7 +36,7 @@ interface Match {
 const PAGE_SIZE = 10;
 
 const selectClass =
-  "h-9 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "h-9 rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus-visible:border-white/30 focus-visible:ring-3 focus-visible:ring-white/20 [&>option]:bg-zinc-900 [&>option]:text-white";
 
 export function AdminMatchesClient({ matches }: { matches: Match[] }) {
   const [scores, setScores] = useState<
@@ -193,26 +193,26 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="flex flex-wrap items-end gap-3 rounded-xl border bg-muted/40 p-4">
+      <div className="flex flex-wrap items-end gap-3 rounded-xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm">
         {/* Search */}
         <div className="flex-1 min-w-[200px]">
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="text-xs font-medium text-white/70 mb-1 block">
             Buscar
           </label>
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-white/55" />
             <Input
               placeholder="Equipo, sede, #partido..."
               value={search}
               onChange={(e) => updateFilter(setSearch, e.target.value)}
-              className="pl-8 h-9"
+              className="pl-8 h-9 border-white/15 bg-white/5 text-white placeholder:text-white/40"
             />
           </div>
         </div>
 
         {/* Group */}
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="text-xs font-medium text-white/70 mb-1 block">
             Grupo
           </label>
           <select
@@ -231,7 +231,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
 
         {/* Stage */}
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="text-xs font-medium text-white/70 mb-1 block">
             Fase
           </label>
           <select
@@ -250,7 +250,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
 
         {/* Status */}
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="text-xs font-medium text-white/70 mb-1 block">
             Estado
           </label>
           <select
@@ -276,28 +276,28 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-white/60">
         {filtered.length} {filtered.length === 1 ? "partido" : "partidos"}
         {hasActiveFilters ? " encontrados" : " en total"}
       </p>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border">
+      <div className="overflow-x-auto rounded-xl border border-white/12 bg-white/5 backdrop-blur-sm">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">#</TableHead>
-              <TableHead>Partido</TableHead>
-              <TableHead>Grupo</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Resultado</TableHead>
-              <TableHead>Acciones</TableHead>
+            <TableRow className="border-white/10 hover:bg-transparent">
+              <TableHead className="w-12 text-white/70">#</TableHead>
+              <TableHead className="text-white/70">Partido</TableHead>
+              <TableHead className="text-white/70">Grupo</TableHead>
+              <TableHead className="text-white/70">Estado</TableHead>
+              <TableHead className="text-white/70">Resultado</TableHead>
+              <TableHead className="text-white/70">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedMatches.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+              <TableRow className="border-white/10 hover:bg-white/5">
+                <TableCell colSpan={6} className="text-center py-8 text-white/55">
                   No se encontraron partidos con los filtros seleccionados.
                 </TableCell>
               </TableRow>
@@ -305,11 +305,11 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
               paginatedMatches.map((match) => {
                 const s = getScore(match.id);
                 return (
-                  <TableRow key={match.id}>
-                    <TableCell className="text-muted-foreground">
+                  <TableRow key={match.id} className="border-white/10 hover:bg-white/5">
+                    <TableCell className="text-white/55">
                       {match.matchNumber}
                     </TableCell>
-                    <TableCell className="font-medium whitespace-nowrap">
+                    <TableCell className="font-medium whitespace-nowrap text-white">
                       <div className="flex items-center gap-1.5">
                         {match.homeTeam?.flagUrl && (
                           <img
@@ -319,7 +319,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                           />
                         )}
                         {match.homeTeam?.code ?? "TBD"}
-                        <span className="text-muted-foreground">vs</span>
+                        <span className="text-white/55">vs</span>
                         {match.awayTeam?.flagUrl && (
                           <img
                             src={match.awayTeam.flagUrl}
@@ -332,7 +332,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                     </TableCell>
                     <TableCell>
                       {match.group ? (
-                        <Badge variant="outline">Grupo {match.group}</Badge>
+                        <Badge className="text-white" variant="outline">Grupo {match.group}</Badge>
                       ) : (
                         <Badge variant="secondary">
                           {STAGE_LABELS[match.stage] ?? match.stage}
@@ -352,7 +352,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                         {STATUS_LABELS[match.status] ?? match.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-white">
                       {match.status === "finished" ? (
                         <span className="font-bold">
                           {match.homeScore} - {match.awayScore}
@@ -360,7 +360,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                       ) : (
                         <div className="flex items-center gap-1">
                           <NumberInput
-                            className="w-14 text-center"
+                            className="w-14 text-center border-white/15 bg-white/5 text-white"
                             value={s.home}
                             onChange={(value) =>
                               setScores((prev) => ({
@@ -369,9 +369,9 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                               }))
                             }
                           />
-                          <span>-</span>
+                          <span className="text-white/70">-</span>
                           <NumberInput
-                            className="w-14 text-center"
+                            className="w-14 text-center border-white/15 bg-white/5 text-white"
                             value={s.away}
                             onChange={(value) =>
                               setScores((prev) => ({
@@ -400,6 +400,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                                 variant="outline"
                                 onClick={() => handleLock(match.id)}
                                 disabled={loading === match.id}
+                                className=" text-black"
                               >
                                 Bloquear
                               </Button>
@@ -419,7 +420,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/60">
             Pagina {safePage} de {totalPages}
           </p>
           <div className="flex items-center gap-1">
@@ -428,13 +429,14 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
               size="sm"
               onClick={() => setPage(1)}
               disabled={safePage <= 1}
+              className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
             >
               Primera
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage <= 1}
             >
@@ -455,15 +457,19 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
               }, [])
               .map((item, i) =>
                 item === "ellipsis" ? (
-                  <span key={`e${i}`} className="px-1 text-muted-foreground">
+                  <span key={`e${i}`} className="px-1 text-white/55">
                     ...
                   </span>
                 ) : (
                   <Button
                     key={item}
-                    variant={safePage === item ? "default" : "outline"}
+                    variant="outline"
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className={
+                      safePage === item
+                        ? "h-8 w-8 border-white/40 bg-white/15 p-0 text-white hover:bg-white/20 hover:text-white"
+                        : "h-8 w-8 border-white/15 bg-transparent p-0 text-white hover:bg-white/10 hover:text-white"
+                    }
                     onClick={() => setPage(item)}
                   >
                     {item}
@@ -474,7 +480,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage >= totalPages}
             >
@@ -485,6 +491,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
               size="sm"
               onClick={() => setPage(totalPages)}
               disabled={safePage >= totalPages}
+              className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
             >
               Ultima
             </Button>

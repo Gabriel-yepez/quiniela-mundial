@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NumberInput } from "@/components/ui/number-input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 
 export default function ScoringPage() {
@@ -62,11 +62,20 @@ export default function ScoringPage() {
   }
 
   return (
-    <Card className="max-w-md border-white/12 bg-white/10 text-white backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-white">Configuracion de Puntos</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="min-h-screen">
+      <div className="grid items-start gap-8 md:grid-cols-2">
+        <div className="max-w-xl">
+          <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
+            Configuracion de Puntos
+          </h2>
+          <p className="text-sm text-white/65">
+            Define cuantos puntos otorga cada tipo de acierto al calificar las
+            predicciones de los usuarios. Estos valores se aplican automaticamente
+            cuando guardas el resultado de un partido.
+          </p>
+        </div>
+        <Card className="w-full max-w-md justify-self-start border-white/12 bg-white/10 text-white backdrop-blur-sm md:justify-self-end">
+          <CardContent className="pt-6">
         <form onSubmit={handleSave} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="exactScore">
@@ -114,7 +123,9 @@ export default function ScoringPage() {
             {loading ? "Guardando..." : "Guardar configuracion"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+        </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

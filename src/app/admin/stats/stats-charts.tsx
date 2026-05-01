@@ -84,22 +84,22 @@ function LeaderboardTooltip({
   if (!active || !payload || payload.length === 0) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-md border border-border bg-background p-3 text-xs shadow-md">
-      <p className="mb-1 font-semibold text-foreground">{data.name ?? "Sin nombre"}</p>
-      <p className="text-muted-foreground">
+    <div className="rounded-md border border-white/15 bg-zinc-900/95 p-3 text-xs shadow-md backdrop-blur-sm">
+      <p className="mb-1 font-semibold text-white">{data.name ?? "Sin nombre"}</p>
+      <p className="text-white/65">
         Puntos: <span className="font-medium text-foreground">{data.totalPoints}</span>
       </p>
-      <p className="text-muted-foreground">
+      <p className="text-white/65">
         Predicciones:{" "}
-        <span className="font-medium text-foreground">{data.totalPredictions}</span>
+        <span className="font-medium text-white">{data.totalPredictions}</span>
       </p>
-      <p className="text-muted-foreground">
+      <p className="text-white/65">
         Exactas: <span className="font-medium text-foreground">{data.exactScores}</span>
       </p>
-      <p className="text-muted-foreground">
+      <p className="text-white/65">
         Ganador: <span className="font-medium text-foreground">{data.correctWinners}</span>
       </p>
-      <p className="text-muted-foreground">
+      <p className="text-white/65">
         Empate: <span className="font-medium text-foreground">{data.correctDraws}</span>
       </p>
     </div>
@@ -116,15 +116,15 @@ function ParticipationTooltip({
   if (!active || !payload || payload.length === 0) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-md border border-border bg-background p-3 text-xs shadow-md">
-      <p className="mb-1 font-semibold text-foreground">Partido #{data.matchNumber}</p>
-      <p className="text-muted-foreground">{data.label}</p>
-      <p className="text-muted-foreground">
+    <div className="rounded-md border border-white/15 bg-zinc-900/95 p-3 text-xs shadow-md backdrop-blur-sm">
+      <p className="mb-1 font-semibold text-white">Partido #{data.matchNumber}</p>
+      <p className="text-white/65">{data.label}</p>
+      <p className="text-white/65">
         Etapa: <span className="font-medium text-foreground">{data.stage}</span>
       </p>
-      <p className="text-muted-foreground">
+      <p className="text-white/65">
         Predicciones:{" "}
-        <span className="font-medium text-foreground">{data.predictionCount}</span>
+        <span className="font-medium text-white">{data.predictionCount}</span>
       </p>
     </div>
   );
@@ -236,44 +236,44 @@ export function StatsCharts() {
   return (
     <div className="space-y-6">
       <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardDescription>Participantes</CardDescription>
-            <CardTitle className="text-3xl tabular-nums">{summary.totalUsers}</CardTitle>
+            <CardDescription className="text-white/65">Participantes</CardDescription>
+            <CardTitle className="text-3xl tabular-nums text-white">{summary.totalUsers}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardDescription>Predicciones hechas</CardDescription>
-            <CardTitle className="text-3xl tabular-nums">
+            <CardDescription className="text-white/65">Predicciones hechas</CardDescription>
+            <CardTitle className="text-3xl tabular-nums text-white">
               {summary.totalPredictions}
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardDescription>Partidos completados</CardDescription>
-            <CardTitle className="text-3xl tabular-nums">{completionLabel}</CardTitle>
+            <CardDescription className="text-white/65">Partidos completados</CardDescription>
+            <CardTitle className="text-3xl tabular-nums text-white">{completionLabel}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardDescription>Promedio de puntos</CardDescription>
-            <CardTitle className="text-3xl tabular-nums">{avgFormatted}</CardTitle>
+            <CardDescription className="text-white/65">Promedio de puntos</CardDescription>
+            <CardTitle className="text-3xl tabular-nums text-white">{avgFormatted}</CardTitle>
           </CardHeader>
         </Card>
       </section>
 
-      <Card>
+      <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Top participantes por puntos</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-white">Top participantes por puntos</CardTitle>
+          <CardDescription className="text-white/65">
             Los {topLeaderboard.length} jugadores con mayor puntaje acumulado
           </CardDescription>
         </CardHeader>
         <CardContent>
           {topLeaderboard.length === 0 ? (
-            <p className="py-12 text-center text-sm text-muted-foreground">
+            <p className="py-12 text-center text-sm text-white/55">
               Aún no hay datos de participantes
             </p>
           ) : (
@@ -282,16 +282,21 @@ export function StatsCharts() {
                 data={topLeaderboard}
                 margin={{ top: 5, right: 10, left: 0, bottom: 60 }}
               >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis
                   dataKey="displayName"
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: "rgba(255,255,255,0.7)" }}
                   angle={-45}
                   textAnchor="end"
                   interval={0}
+                  stroke="rgba(255,255,255,0.2)"
                 />
-                <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
-                <Tooltip content={<LeaderboardTooltip />} cursor={{ fill: "rgba(0,0,0,0.04)" }} />
+                <YAxis
+                  tick={{ fontSize: 12, fill: "rgba(255,255,255,0.7)" }}
+                  allowDecimals={false}
+                  stroke="rgba(255,255,255,0.2)"
+                />
+                <Tooltip content={<LeaderboardTooltip />} cursor={{ fill: "rgba(255,255,255,0.06)" }} />
                 <Bar dataKey="totalPoints" fill="#2563eb" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -300,16 +305,16 @@ export function StatsCharts() {
       </Card>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Tipos de predicciones</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Tipos de predicciones</CardTitle>
+            <CardDescription className="text-white/65">
               Distribución de aciertos sobre {accuracyTotal} predicciones
             </CardDescription>
           </CardHeader>
           <CardContent>
             {accuracyEntries.length === 0 ? (
-              <p className="py-12 text-center text-sm text-muted-foreground">
+              <p className="py-12 text-center text-sm text-white/55">
                 Aún no hay predicciones registradas
               </p>
             ) : (
@@ -353,7 +358,7 @@ export function StatsCharts() {
                         ? ((count / accuracyTotal) * 100).toFixed(1)
                         : "0";
                       return (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-white/65">
                           {value} ({pct}%)
                         </span>
                       );
@@ -365,16 +370,16 @@ export function StatsCharts() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/12 bg-white/5 text-white backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Participación por partido</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Participación por partido</CardTitle>
+            <CardDescription className="text-white/65">
               Cantidad de predicciones registradas en cada encuentro
             </CardDescription>
           </CardHeader>
           <CardContent>
             {matchParticipation.length === 0 ? (
-              <p className="py-12 text-center text-sm text-muted-foreground">
+              <p className="py-12 text-center text-sm text-white/55">
                 Aún no hay partidos con predicciones
               </p>
             ) : (
@@ -383,16 +388,21 @@ export function StatsCharts() {
                   data={matchParticipation}
                   margin={{ top: 5, right: 10, left: 0, bottom: 40 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis
                     dataKey="matchNumber"
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: "rgba(255,255,255,0.7)" }}
                     interval="preserveStartEnd"
+                    stroke="rgba(255,255,255,0.2)"
                   />
-                  <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: "rgba(255,255,255,0.7)" }}
+                    allowDecimals={false}
+                    stroke="rgba(255,255,255,0.2)"
+                  />
                   <Tooltip
                     content={<ParticipationTooltip />}
-                    cursor={{ fill: "rgba(0,0,0,0.04)" }}
+                    cursor={{ fill: "rgba(255,255,255,0.06)" }}
                   />
                   <Bar dataKey="predictionCount" fill="#7c3aed" radius={[4, 4, 0, 0]} />
                 </BarChart>
