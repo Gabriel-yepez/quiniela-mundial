@@ -71,38 +71,34 @@ export function Navbar() {
           </Link>
           {session && (
             <div className="hidden sm:flex items-center gap-4">
-              <Link
-                href="/matches"
-                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-              >
-                Partidos
-              </Link>
-              <Link
-                href="/predictions"
-                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-              >
-                Mis Predicciones
-              </Link>
-              <Link
-                href="/leaderboard"
-                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-              >
-                Ranking
-              </Link>
-              <Link
-                href="/rules"
-                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-              >
-                Reglas
-              </Link>
-              {session.user.role === "admin" && (
-                <Link
-                  href="/admin"
-                  className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-                >
-                  Admin
-                </Link>
-              )}
+              {[
+                { href: "/matches", label: "Partidos" },
+                { href: "/predictions", label: "Mis Predicciones" },
+                { href: "/leaderboard", label: "Ranking" },
+                { href: "/rules", label: "Reglas" },
+                ...(session.user.role === "admin"
+                  ? [{ href: "/admin", label: "Admin" }]
+                  : []),
+              ].map((item) => {
+                const isActive =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={
+                      isActive
+                        ? "text-sm font-semibold text-black transition-colors"
+                        : "text-sm text-neutral-600 transition-colors hover:text-neutral-900"
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

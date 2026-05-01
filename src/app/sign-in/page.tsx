@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -209,15 +210,29 @@ export default function SignInPage() {
   const showBackLink = mode === "set-password" || mode === "forgot-password" || mode === "reset-password";
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-      <Card className="w-full max-w-sm border-white/12 bg-white/10 text-white shadow-sm backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-white">
-            {titles[mode]}
-          </CardTitle>
-          <p className="text-sm text-white/65">{descriptions[mode]}</p>
-        </CardHeader>
-        <CardContent className="space-y-4">
+    <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
+      <div className="hidden items-center justify-center p-6 sm:p-10 lg:flex lg:p-12">
+        <div className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-xl border border-white/12 shadow-lg ring-1 ring-white/10">
+          <Image
+            src="/banner_mundial.png"
+            alt="Mundial 2026"
+            fill
+            priority
+            sizes="(min-width: 1024px) 50vw, 0px"
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center p-6 sm:p-10 lg:p-12">
+        <Card className="w-full max-w-md border-white/12 bg-white/10 text-white shadow-sm backdrop-blur-sm">
+          <CardHeader className="px-8 pt-8 text-center sm:px-10 sm:pt-10">
+            <CardTitle className="text-2xl text-white">
+              {titles[mode]}
+            </CardTitle>
+            <p className="text-sm text-white/65">{descriptions[mode]}</p>
+          </CardHeader>
+          <CardContent className="space-y-4 px-8 pb-8 sm:px-10 sm:pb-10">
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === "register" && (
               <div className="space-y-1">
@@ -393,8 +408,9 @@ export default function SignInPage() {
               </Button>
             </>
           )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
