@@ -3,6 +3,7 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -124,9 +125,11 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
                 </p>
               </div>
               {match.homeTeam?.flagUrl && (
-                <img
+                <Image
                   src={match.homeTeam.flagUrl}
                   alt={match.homeTeam.code}
+                  width={32}
+                  height={24}
                   className="w-8 h-6 object-cover rounded-sm shadow-sm"
                 />
               )}
@@ -144,9 +147,11 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
 
             <div className="flex-1 flex items-center gap-2">
               {match.awayTeam?.flagUrl && (
-                <img
+                <Image
                   src={match.awayTeam.flagUrl}
                   alt={match.awayTeam.code}
+                  width={32}
+                  height={24}
                   className="w-8 h-6 object-cover rounded-sm shadow-sm"
                 />
               )}

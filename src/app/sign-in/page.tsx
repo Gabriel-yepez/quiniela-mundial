@@ -214,7 +214,7 @@ export default function SignInPage() {
       <div className="hidden items-center justify-center p-6 sm:p-10 lg:flex lg:p-12">
         <div className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-xl border border-white/12 shadow-lg ring-1 ring-white/10">
           <Image
-            src="/banner_mundial.png"
+            src="/banner_mundial.jpg"
             alt="Mundial 2026"
             fill
             priority

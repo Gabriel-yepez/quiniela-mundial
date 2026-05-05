@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { NumberInput } from "@/components/ui/number-input";
 import { Input } from "@/components/ui/input";
@@ -312,18 +313,22 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                     <TableCell className="font-medium whitespace-nowrap text-white">
                       <div className="flex items-center gap-1.5">
                         {match.homeTeam?.flagUrl && (
-                          <img
+                          <Image
                             src={match.homeTeam.flagUrl}
                             alt={match.homeTeam.code}
+                            width={20}
+                            height={16}
                             className="w-5 h-4 object-cover rounded-sm"
                           />
                         )}
                         {match.homeTeam?.code ?? "TBD"}
                         <span className="text-white/55">vs</span>
                         {match.awayTeam?.flagUrl && (
-                          <img
+                          <Image
                             src={match.awayTeam.flagUrl}
                             alt={match.awayTeam.code}
+                            width={20}
+                            height={16}
                             className="w-5 h-4 object-cover rounded-sm"
                           />
                         )}

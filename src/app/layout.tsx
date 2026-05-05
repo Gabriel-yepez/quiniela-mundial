@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
 import { PublicBackground } from "@/components/public-background";
@@ -79,6 +80,7 @@ export default function RootLayout({
             <div className="relative z-10 flex min-h-full flex-col">
               <Navbar />
               <main className="flex-1">{children}</main>
+              <Footer />
               <Toaster />
             </div>
           </div>
