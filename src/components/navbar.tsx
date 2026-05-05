@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -18,11 +18,31 @@ import {
 gsap.registerPlugin(useGSAP);
 
 export function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const showBack = pathname !== "/";
   const navRef = useRef<HTMLElement>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (status !== "authenticated") {
+      setIsAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : { role: null }))
+      .then((data: { role: string | null }) => {
+        if (!cancelled) setIsAdmin(data.role === "admin");
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [status]);
 
   useGSAP(
     () => {
@@ -76,7 +96,7 @@ export function Navbar() {
                 { href: "/predictions", label: "Mis Predicciones" },
                 { href: "/leaderboard", label: "Ranking" },
                 { href: "/rules", label: "Reglas" },
-                ...(session.user.role === "admin"
+                ...(isAdmin
                   ? [{ href: "/admin", label: "Admin" }]
                   : []),
               ].map((item) => {
@@ -141,7 +161,7 @@ export function Navbar() {
                     Reglas
                   </Link>
                 </DropdownMenuItem>
-                {session.user.role === "admin" && (
+                {isAdmin && (
                   <DropdownMenuItem className="sm:hidden">
                     <Link href="/admin" className="w-full">
                       Admin

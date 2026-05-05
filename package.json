@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "npx tsx prisma/seed.ts",
+    "migrate:run": "npx tsx scripts/run-migration.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

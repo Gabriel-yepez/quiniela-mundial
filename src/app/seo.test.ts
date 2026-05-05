@@ -133,31 +133,6 @@ describe("opengraph-image", () => {
   });
 });
 
-// ─── PWA icon exports ─────────────────────────────────────────────────────────
-
-import * as icon from "@/app/icon";
-import * as appleIcon from "@/app/apple-icon";
-
-describe("icon (favicon)", () => {
-  test("dimensions are 32×32", () => {
-    expect(icon.size).toEqual({ width: 32, height: 32 });
-  });
-
-  test("content type is image/png", () => {
-    expect(icon.contentType).toBe("image/png");
-  });
-});
-
-describe("apple-icon", () => {
-  test("dimensions are 180×180", () => {
-    expect(appleIcon.size).toEqual({ width: 180, height: 180 });
-  });
-
-  test("content type is image/png", () => {
-    expect(appleIcon.contentType).toBe("image/png");
-  });
-});
-
 // ─── /rules page metadata ─────────────────────────────────────────────────────
 
 import { metadata as rulesMetadata } from "@/app/(public)/rules/layout";

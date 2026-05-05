@@ -12,6 +12,19 @@ vi.mock("next/server", () => ({
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth-server", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/auth-server")>(
+    "@/lib/auth-server"
+  );
+  return actual;
+});
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(async () => ({ getAll: () => [] })),
+}));
+vi.mock("next-auth/jwt", () => ({
+  getToken: vi.fn(async () => null),
+}));
+vi.mock("server-only", () => ({}));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     user: { findMany: vi.fn() },

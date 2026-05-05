@@ -54,11 +54,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = (token.role as string) ?? "user";
-      }
+    async session({ session }) {
+      // The client must only see name/email/image. id/role stay in the JWT
+      // token and are read server-side via @/lib/auth-server.
       return session;
     },
   },

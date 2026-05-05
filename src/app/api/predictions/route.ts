@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireUser } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const auth = await requireUser();
+  if (auth.response) return auth.response;
 
   const { matchId, homeScore, awayScore } = await req.json();
 
@@ -29,13 +27,13 @@ export async function POST(req: NextRequest) {
   const prediction = await prisma.prediction.upsert({
     where: {
       userId_matchId: {
-        userId: session.user.id,
+        userId: auth.user.id,
         matchId,
       },
     },
     update: { homeScore, awayScore },
     create: {
-      userId: session.user.id,
+      userId: auth.user.id,
       matchId,
       homeScore,
       awayScore,
@@ -43,4 +41,35 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(prediction);
+}
+
+export async function GET() {
+  const auth = await requireUser();
+  if (auth.response) return auth.response;
+
+  const predictions = await prisma.prediction.findMany({
+    where: { userId: auth.user.id },
+    include: {
+      match: {
+        include: { homeTeam: true, awayTeam: true },
+      },
+    },
+    orderBy: { match: { matchNumber: "asc" } },
+  });
+
+  const totalPoints = predictions.reduce(
+    (sum, p) => sum + (p.points ?? 0),
+    0
+  );
+
+  return NextResponse.json({
+    predictions: predictions.map((p) => ({
+      ...p,
+      match: {
+        ...p.match,
+        dateTime: p.match.dateTime.toISOString(),
+      },
+    })),
+    totalPoints,
+  });
 }

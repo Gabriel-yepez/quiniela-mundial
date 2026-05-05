@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
 
 type PointsRange = "0" | "1-5" | "6-10" | "11-15" | "16-20" | "21+";
@@ -16,10 +16,8 @@ function bucketForPoints(points: number): PointsRange {
 }
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id || session.user.role !== "admin") {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const auth = await requireAdmin();
+  if (auth.response) return auth.response;
 
   const [users, matches] = await Promise.all([
     prisma.user.findMany({
