@@ -71,20 +71,24 @@ model Team {
 }
 
 model Match {
-  id          String   @id @default(cuid())
-  matchNumber Int      @unique
-  stage       String
-  group       String?
-  dateTime    DateTime
-  venue       String
-  homeTeamId  String?
-  awayTeamId  String?
-  homeScore   Int?
-  awayScore   Int?
-  status      String   @default("scheduled")
-  homeTeam    Team?    @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam    Team?    @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  predictions Prediction[]
+  id                 String   @id @default(cuid())
+  matchNumber        Int      @unique
+  stage              String
+  group              String?
+  dateTime           DateTime
+  venue              String
+  homeTeamId         String?
+  awayTeamId         String?
+  homeScore          Int?
+  awayScore          Int?
+  extraTimeHomeScore Int?
+  extraTimeAwayScore Int?
+  penaltyHomeScore   Int?
+  penaltyAwayScore   Int?
+  status             String   @default("scheduled")
+  homeTeam           Team?    @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam           Team?    @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  predictions        Prediction[]
 }
 
 model Prediction {
