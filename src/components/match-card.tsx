@@ -3,12 +3,12 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Flag } from "@/components/flag";
 import { STATUS_LABELS } from "@/lib/match-constants";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -23,6 +23,10 @@ interface MatchCardProps {
     venue: string;
     homeScore: number | null;
     awayScore: number | null;
+    extraTimeHomeScore?: number | null;
+    extraTimeAwayScore?: number | null;
+    penaltyHomeScore?: number | null;
+    penaltyAwayScore?: number | null;
     status: string;
     homeTeam: { name: string; code: string; flagUrl: string | null } | null;
     awayTeam: { name: string; code: string; flagUrl: string | null } | null;
@@ -124,35 +128,52 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
                   {match.homeTeam?.code ?? "TBD"}
                 </p>
               </div>
-              {match.homeTeam?.flagUrl && (
-                <Image
-                  src={match.homeTeam.flagUrl}
-                  alt={match.homeTeam.code}
-                  width={32}
-                  height={24}
-                  className="w-8 h-6 object-cover rounded-sm shadow-sm"
+              {match.homeTeam && (
+                <Flag
+                  url={match.homeTeam.flagUrl}
+                  code={match.homeTeam.code}
+                  alt={match.homeTeam.name}
+                  width={44}
+                  height={32}
+                  className="shadow-sm"
                 />
               )}
             </div>
 
             <div className="min-w-[60px] rounded-md border border-zinc-300 bg-zinc-100 px-3 py-1 text-center">
               {isFinished ? (
-                <span className="font-bold text-lg">
-                  {match.homeScore} - {match.awayScore}
-                </span>
+                <div className="flex flex-col">
+                  <span className="font-bold text-lg leading-tight">
+                    {match.homeScore} - {match.awayScore}
+                  </span>
+                  {match.extraTimeHomeScore != null &&
+                    match.extraTimeAwayScore != null && (
+                      <span className="text-[10px] text-muted-foreground leading-tight">
+                        T.E. +{match.extraTimeHomeScore}-+
+                        {match.extraTimeAwayScore}
+                      </span>
+                    )}
+                  {match.penaltyHomeScore != null &&
+                    match.penaltyAwayScore != null && (
+                      <span className="text-[10px] text-muted-foreground leading-tight">
+                        Pen. {match.penaltyHomeScore}-{match.penaltyAwayScore}
+                      </span>
+                    )}
+                </div>
               ) : (
                 <span className="text-sm text-muted-foreground">vs</span>
               )}
             </div>
 
             <div className="flex-1 flex items-center gap-2">
-              {match.awayTeam?.flagUrl && (
-                <Image
-                  src={match.awayTeam.flagUrl}
-                  alt={match.awayTeam.code}
-                  width={32}
-                  height={24}
-                  className="w-8 h-6 object-cover rounded-sm shadow-sm"
+              {match.awayTeam && (
+                <Flag
+                  url={match.awayTeam.flagUrl}
+                  code={match.awayTeam.code}
+                  alt={match.awayTeam.name}
+                  width={44}
+                  height={32}
+                  className="shadow-sm"
                 />
               )}
               <div className="text-left">

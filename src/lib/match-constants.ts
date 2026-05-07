@@ -13,3 +13,18 @@ export const STATUS_LABELS: Record<string, string> = {
   locked: "Bloqueado",
   finished: "Finalizado",
 };
+
+export const KNOCKOUT_STAGES = [
+  "round32",
+  "round16",
+  "quarter",
+  "semi",
+  "third",
+  "final",
+] as const;
+
+export type KnockoutStage = (typeof KNOCKOUT_STAGES)[number];
+
+export function isKnockoutStage(stage: string): stage is KnockoutStage {
+  return (KNOCKOUT_STAGES as readonly string[]).includes(stage);
+}

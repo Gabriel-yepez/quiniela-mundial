@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Flag } from "@/components/flag";
 import { PredictionForm } from "@/components/prediction-form";
 
 interface Team {
@@ -22,6 +22,10 @@ interface MatchDetail {
   venue: string;
   homeScore: number | null;
   awayScore: number | null;
+  extraTimeHomeScore: number | null;
+  extraTimeAwayScore: number | null;
+  penaltyHomeScore: number | null;
+  penaltyAwayScore: number | null;
   status: string;
   homeTeam: Team | null;
   awayTeam: Team | null;
@@ -114,13 +118,14 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
 
       <div className="flex items-center justify-center gap-6 py-4">
         <div className="space-y-2 text-center">
-          {match.homeTeam?.flagUrl && (
-            <Image
-              src={match.homeTeam.flagUrl}
-              alt={match.homeTeam.name ?? match.homeTeam.code}
-              width={48}
-              height={36}
-              className="mx-auto rounded object-cover shadow-sm"
+          {match.homeTeam && (
+            <Flag
+              url={match.homeTeam.flagUrl}
+              code={match.homeTeam.code}
+              alt={match.homeTeam.name}
+              width={72}
+              height={54}
+              className="mx-auto shadow-sm"
             />
           )}
           <p className="text-2xl font-bold">
@@ -133,22 +138,39 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
 
         <div className="rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-center backdrop-blur-sm">
           {isFinished ? (
-            <span className="text-3xl font-semibold text-white">
-              {match.homeScore} - {match.awayScore}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-3xl font-semibold text-white leading-tight">
+                {match.homeScore} - {match.awayScore}
+              </span>
+              {match.extraTimeHomeScore != null &&
+                match.extraTimeAwayScore != null && (
+                  <span className="text-xs text-white/65 mt-1">
+                    Tiempo extra: +{match.extraTimeHomeScore} - +
+                    {match.extraTimeAwayScore}
+                  </span>
+                )}
+              {match.penaltyHomeScore != null &&
+                match.penaltyAwayScore != null && (
+                  <span className="text-xs text-white/65">
+                    Penales: {match.penaltyHomeScore} -{" "}
+                    {match.penaltyAwayScore}
+                  </span>
+                )}
+            </div>
           ) : (
             <span className="text-xl text-white/50">vs</span>
           )}
         </div>
 
         <div className="space-y-2 text-center">
-          {match.awayTeam?.flagUrl && (
-            <Image
-              src={match.awayTeam.flagUrl}
-              alt={match.awayTeam.name ?? match.awayTeam.code}
-              width={48}
-              height={36}
-              className="mx-auto rounded object-cover shadow-sm"
+          {match.awayTeam && (
+            <Flag
+              url={match.awayTeam.flagUrl}
+              code={match.awayTeam.code}
+              alt={match.awayTeam.name}
+              width={72}
+              height={54}
+              className="mx-auto shadow-sm"
             />
           )}
           <p className="text-2xl font-bold">
