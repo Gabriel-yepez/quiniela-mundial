@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { NumberInput } from "@/components/ui/number-input";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Flag } from "@/components/flag";
 import {
   Table,
   TableBody,
@@ -16,7 +16,11 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { STAGE_LABELS, STATUS_LABELS } from "@/lib/match-constants";
+import {
+  STAGE_LABELS,
+  STATUS_LABELS,
+  isKnockoutStage,
+} from "@/lib/match-constants";
 
 interface Match {
   id: string;
@@ -29,10 +33,32 @@ interface Match {
   awayTeamId: string | null;
   homeScore: number | null;
   awayScore: number | null;
+  extraTimeHomeScore: number | null;
+  extraTimeAwayScore: number | null;
+  penaltyHomeScore: number | null;
+  penaltyAwayScore: number | null;
   status: string;
   homeTeam: { name: string; code: string; flagUrl: string | null } | null;
   awayTeam: { name: string; code: string; flagUrl: string | null } | null;
 }
+
+interface ScoreState {
+  home: string;
+  away: string;
+  etHome: string;
+  etAway: string;
+  penHome: string;
+  penAway: string;
+}
+
+const EMPTY_SCORE: ScoreState = {
+  home: "",
+  away: "",
+  etHome: "",
+  etAway: "",
+  penHome: "",
+  penAway: "",
+};
 
 const PAGE_SIZE = 10;
 
@@ -40,9 +66,7 @@ const selectClass =
   "h-9 rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus-visible:border-white/30 focus-visible:ring-3 focus-visible:ring-white/20 [&>option]:bg-zinc-900 [&>option]:text-white";
 
 export function AdminMatchesClient({ matches }: { matches: Match[] }) {
-  const [scores, setScores] = useState<
-    Record<string, { home: string; away: string }>
-  >({});
+  const [scores, setScores] = useState<Record<string, ScoreState>>({});
   const [loading, setLoading] = useState<string | null>(null);
 
   // Filters
@@ -119,12 +143,23 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
     filterStatus !== "all" ||
     search !== "";
 
-  function getScore(matchId: string) {
-    return scores[matchId] ?? { home: "", away: "" };
+  function getScore(matchId: string): ScoreState {
+    return scores[matchId] ?? EMPTY_SCORE;
   }
 
-  async function handleSaveResult(matchId: string) {
-    const s = getScore(matchId);
+  function updateScore(matchId: string, patch: Partial<ScoreState>) {
+    setScores((prev) => ({
+      ...prev,
+      [matchId]: { ...(prev[matchId] ?? EMPTY_SCORE), ...patch },
+    }));
+  }
+
+  function parseOptionalInt(value: string): number | null {
+    return value === "" ? null : parseInt(value, 10);
+  }
+
+  async function handleSaveResult(match: Match) {
+    const s = getScore(match.id);
     if (s.home === "" || s.away === "") {
       toast.error("Ingresa ambos marcadores", {
         description: "Debes llenar el marcador de ambos equipos.",
@@ -132,15 +167,44 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
       return;
     }
 
-    setLoading(matchId);
+    const knockout = isKnockoutStage(match.stage);
+
+    const etHome = parseOptionalInt(s.etHome);
+    const etAway = parseOptionalInt(s.etAway);
+    const penHome = parseOptionalInt(s.penHome);
+    const penAway = parseOptionalInt(s.penAway);
+
+    if (knockout) {
+      const etPartial =
+        (etHome === null) !== (etAway === null);
+      const penPartial =
+        (penHome === null) !== (penAway === null);
+      if (etPartial || penPartial) {
+        toast.error("Marcador incompleto", {
+          description:
+            "Si capturas tiempo extra o penales, debes llenar ambos equipos.",
+        });
+        return;
+      }
+    }
+
+    setLoading(match.id);
     try {
       const res = await fetch("/api/admin/results", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          matchId,
+          matchId: match.id,
           homeScore: parseInt(s.home, 10),
           awayScore: parseInt(s.away, 10),
+          ...(knockout
+            ? {
+                extraTimeHomeScore: etHome,
+                extraTimeAwayScore: etAway,
+                penaltyHomeScore: penHome,
+                penaltyAwayScore: penAway,
+              }
+            : {}),
         }),
       });
 
@@ -305,6 +369,8 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
             ) : (
               paginatedMatches.map((match) => {
                 const s = getScore(match.id);
+                const knockout = isKnockoutStage(match.stage);
+                const isFinished = match.status === "finished";
                 return (
                   <TableRow key={match.id} className="border-white/10 hover:bg-white/5">
                     <TableCell className="text-white/55">
@@ -312,24 +378,24 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                     </TableCell>
                     <TableCell className="font-medium whitespace-nowrap text-white">
                       <div className="flex items-center gap-1.5">
-                        {match.homeTeam?.flagUrl && (
-                          <Image
-                            src={match.homeTeam.flagUrl}
-                            alt={match.homeTeam.code}
-                            width={20}
-                            height={16}
-                            className="w-5 h-4 object-cover rounded-sm"
+                        {match.homeTeam && (
+                          <Flag
+                            url={match.homeTeam.flagUrl}
+                            code={match.homeTeam.code}
+                            alt={match.homeTeam.name}
+                            width={28}
+                            height={21}
                           />
                         )}
                         {match.homeTeam?.code ?? "TBD"}
                         <span className="text-white/55">vs</span>
-                        {match.awayTeam?.flagUrl && (
-                          <Image
-                            src={match.awayTeam.flagUrl}
-                            alt={match.awayTeam.code}
-                            width={20}
-                            height={16}
-                            className="w-5 h-4 object-cover rounded-sm"
+                        {match.awayTeam && (
+                          <Flag
+                            url={match.awayTeam.flagUrl}
+                            code={match.awayTeam.code}
+                            alt={match.awayTeam.name}
+                            width={28}
+                            height={21}
                           />
                         )}
                         {match.awayTeam?.code ?? "TBD"}
@@ -358,43 +424,110 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-white">
-                      {match.status === "finished" ? (
-                        <span className="font-bold">
-                          {match.homeScore} - {match.awayScore}
-                        </span>
+                      {isFinished ? (
+                        <div className="flex flex-col gap-0.5 text-sm">
+                          <span className="font-bold">
+                            {match.homeScore} - {match.awayScore}
+                          </span>
+                          {knockout &&
+                            match.extraTimeHomeScore !== null &&
+                            match.extraTimeAwayScore !== null && (
+                              <span className="text-xs text-white/55">
+                                T. extra: +{match.extraTimeHomeScore} - +
+                                {match.extraTimeAwayScore}
+                              </span>
+                            )}
+                          {knockout &&
+                            match.penaltyHomeScore !== null &&
+                            match.penaltyAwayScore !== null && (
+                              <span className="text-xs text-white/55">
+                                Penales: {match.penaltyHomeScore} -{" "}
+                                {match.penaltyAwayScore}
+                              </span>
+                            )}
+                        </div>
                       ) : (
-                        <div className="flex items-center gap-1">
-                          <NumberInput
-                            className="w-14 text-center border-white/15 bg-white/5 text-white"
-                            value={s.home}
-                            onChange={(value) =>
-                              setScores((prev) => ({
-                                ...prev,
-                                [match.id]: { ...s, home: value },
-                              }))
-                            }
-                          />
-                          <span className="text-white/70">-</span>
-                          <NumberInput
-                            className="w-14 text-center border-white/15 bg-white/5 text-white"
-                            value={s.away}
-                            onChange={(value) =>
-                              setScores((prev) => ({
-                                ...prev,
-                                [match.id]: { ...s, away: value },
-                              }))
-                            }
-                          />
+                        <div className="flex flex-col gap-1">
+                          <div>
+                            <p className="mb-0.5 text-[10px] uppercase tracking-wide text-white/45">
+                              90 min
+                            </p>
+                            <div className="flex items-center gap-1">
+                              <NumberInput
+                                className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                value={s.home}
+                                onChange={(value) =>
+                                  updateScore(match.id, { home: value })
+                                }
+                              />
+                              <span className="text-white/70">-</span>
+                              <NumberInput
+                                className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                value={s.away}
+                                onChange={(value) =>
+                                  updateScore(match.id, { away: value })
+                                }
+                              />
+                            </div>
+                          </div>
+                          {knockout && (
+                            <>
+                              <div>
+                                <p className="mb-0.5 text-[10px] uppercase tracking-wide text-white/45">
+                                  T. extra (goles)
+                                </p>
+                                <div className="flex items-center gap-1">
+                                  <NumberInput
+                                    className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                    value={s.etHome}
+                                    onChange={(value) =>
+                                      updateScore(match.id, { etHome: value })
+                                    }
+                                  />
+                                  <span className="text-white/70">-</span>
+                                  <NumberInput
+                                    className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                    value={s.etAway}
+                                    onChange={(value) =>
+                                      updateScore(match.id, { etAway: value })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <p className="mb-0.5 text-[10px] uppercase tracking-wide text-white/45">
+                                  Penales
+                                </p>
+                                <div className="flex items-center gap-1">
+                                  <NumberInput
+                                    className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                    value={s.penHome}
+                                    onChange={(value) =>
+                                      updateScore(match.id, { penHome: value })
+                                    }
+                                  />
+                                  <span className="text-white/70">-</span>
+                                  <NumberInput
+                                    className="w-14 text-center border-white/15 bg-white/5 text-white"
+                                    value={s.penAway}
+                                    onChange={(value) =>
+                                      updateScore(match.id, { penAway: value })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        {match.status !== "finished" && (
+                        {!isFinished && (
                           <>
                             <Button
                               size="sm"
-                              onClick={() => handleSaveResult(match.id)}
+                              onClick={() => handleSaveResult(match)}
                               disabled={loading === match.id}
                             >
                               Guardar

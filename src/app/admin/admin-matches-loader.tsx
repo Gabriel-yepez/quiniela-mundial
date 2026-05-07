@@ -15,6 +15,10 @@ interface Match {
   awayTeamId: string | null;
   homeScore: number | null;
   awayScore: number | null;
+  extraTimeHomeScore: number | null;
+  extraTimeAwayScore: number | null;
+  penaltyHomeScore: number | null;
+  penaltyAwayScore: number | null;
   status: string;
   homeTeam: { name: string; code: string; flagUrl: string | null } | null;
   awayTeam: { name: string; code: string; flagUrl: string | null } | null;
