@@ -93,6 +93,7 @@ export function Navbar() {
             <div className="hidden sm:flex items-center gap-4">
               {[
                 { href: "/matches", label: "Partidos" },
+                { href: "/groups", label: "Grupos" },
                 { href: "/predictions", label: "Mis Predicciones" },
                 { href: "/leaderboard", label: "Ranking" },
                 { href: "/rules", label: "Reglas" },
@@ -144,6 +145,11 @@ export function Navbar() {
                 <DropdownMenuItem className="sm:hidden">
                   <Link href="/matches" className="w-full">
                     Partidos
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="sm:hidden">
+                  <Link href="/groups" className="w-full">
+                    Grupos
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="sm:hidden">
