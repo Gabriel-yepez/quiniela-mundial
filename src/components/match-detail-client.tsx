@@ -123,8 +123,6 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
               url={match.homeTeam.flagUrl}
               code={match.homeTeam.code}
               alt={match.homeTeam.name}
-              width={72}
-              height={54}
               className="mx-auto shadow-sm"
             />
           )}
@@ -168,8 +166,6 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
               url={match.awayTeam.flagUrl}
               code={match.awayTeam.code}
               alt={match.awayTeam.name}
-              width={72}
-              height={54}
               className="mx-auto shadow-sm"
             />
           )}

@@ -383,8 +383,6 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                             url={match.homeTeam.flagUrl}
                             code={match.homeTeam.code}
                             alt={match.homeTeam.name}
-                            width={28}
-                            height={21}
                           />
                         )}
                         {match.homeTeam?.code ?? "TBD"}
@@ -394,8 +392,6 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                             url={match.awayTeam.flagUrl}
                             code={match.awayTeam.code}
                             alt={match.awayTeam.name}
-                            width={28}
-                            height={21}
                           />
                         )}
                         {match.awayTeam?.code ?? "TBD"}

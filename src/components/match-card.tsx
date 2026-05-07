@@ -133,8 +133,6 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
                   url={match.homeTeam.flagUrl}
                   code={match.homeTeam.code}
                   alt={match.homeTeam.name}
-                  width={44}
-                  height={32}
                   className="shadow-sm"
                 />
               )}
@@ -171,8 +169,6 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
                   url={match.awayTeam.flagUrl}
                   code={match.awayTeam.code}
                   alt={match.awayTeam.name}
-                  width={44}
-                  height={32}
                   className="shadow-sm"
                 />
               )}
