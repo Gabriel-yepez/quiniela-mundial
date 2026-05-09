@@ -103,3 +103,108 @@ describe("rankBestThirds", () => {
     expect(rankBestThirds(groups)).toEqual([]);
   });
 });
+
+import { resolveBracket, BRACKET_RULES_2026 } from "./bracket";
+
+describe("BRACKET_RULES_2026", () => {
+  test("covers exactly the 16 round32 matches (#73-#88)", () => {
+    const numbers = BRACKET_RULES_2026.map((r) => r.matchNumber).sort(
+      (a, b) => a - b
+    );
+    expect(numbers).toEqual([
+      73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88,
+    ]);
+  });
+
+  test("uses each of the 12 winners and 12 runners-up exactly once", () => {
+    const winners: string[] = [];
+    const runners: string[] = [];
+    for (const rule of BRACKET_RULES_2026) {
+      for (const slot of [rule.home, rule.away]) {
+        if (slot.type === "winner") winners.push(slot.group);
+        if (slot.type === "runnerUp") runners.push(slot.group);
+      }
+    }
+    expect(winners.sort()).toEqual(
+      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"].sort()
+    );
+    expect(runners.sort()).toEqual(
+      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"].sort()
+    );
+  });
+
+  test("uses third seeds 1..8 exactly once", () => {
+    const seeds: number[] = [];
+    for (const rule of BRACKET_RULES_2026) {
+      for (const slot of [rule.home, rule.away]) {
+        if (slot.type === "thirdSeed") seeds.push(slot.seed);
+      }
+    }
+    expect(seeds.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+  });
+});
+
+describe("resolveBracket", () => {
+  function buildGroup(letter: string, ids: string[]): GroupStanding {
+    return {
+      group: letter,
+      standings: ids.map((id, i) => ({
+        teamId: id,
+        team: { name: id, code: id, flagUrl: null },
+        matchesPlayed: 3,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        goalDifference: 0,
+        points: 9 - i * 3,
+        position: i + 1,
+      })),
+    };
+  }
+
+  test("resolves all 16 matches when 12 groups are complete", () => {
+    const groups = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"].map(
+      (letter) =>
+        buildGroup(letter, [
+          `${letter}1`,
+          `${letter}2`,
+          `${letter}3`,
+          `${letter}4`,
+        ])
+    );
+    groups.forEach((g, idx) => {
+      const t3 = g.standings[2];
+      t3.points = 12 - idx;
+    });
+
+    const bestThirds = rankBestThirds(groups);
+    const resolved = resolveBracket(groups, bestThirds);
+
+    expect(resolved.size).toBe(16);
+    for (const [, pair] of resolved) {
+      expect(pair.homeTeamId).not.toBeNull();
+      expect(pair.awayTeamId).not.toBeNull();
+    }
+  });
+
+  test("returns null slots when source group is missing", () => {
+    const groups: GroupStanding[] = [];
+    const resolved = resolveBracket(groups, []);
+    expect(resolved.size).toBe(16);
+    for (const [, pair] of resolved) {
+      expect(pair.homeTeamId).toBeNull();
+      expect(pair.awayTeamId).toBeNull();
+    }
+  });
+
+  test("is deterministic for the same input", () => {
+    const groups = ["A", "B"].map((letter) =>
+      buildGroup(letter, [`${letter}1`, `${letter}2`, `${letter}3`, `${letter}4`])
+    );
+    const a = resolveBracket(groups, rankBestThirds(groups));
+    const b = resolveBracket(groups, rankBestThirds(groups));
+    expect([...a.entries()]).toEqual([...b.entries()]);
+  });
+});
