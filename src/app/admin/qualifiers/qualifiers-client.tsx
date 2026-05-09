@@ -141,10 +141,12 @@ export function QualifiersClient({ data }: { data: QualifiersData }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          assignments: data.round32Matches.map((m) => ({
-            matchId: m.id,
-            ...(assignments.get(m.id) ?? { homeTeamId: null, awayTeamId: null }),
-          })),
+          assignments: data.round32Matches
+            .filter((m) => m.status !== "finished")
+            .map((m) => ({
+              matchId: m.id,
+              ...(assignments.get(m.id) ?? { homeTeamId: null, awayTeamId: null }),
+            })),
         }),
       });
       const json = await res.json();
@@ -180,11 +182,11 @@ export function QualifiersClient({ data }: { data: QualifiersData }) {
         onChange={updateAssignment}
       />
 
-      <div className="sticky bottom-0 -mx-4 flex flex-wrap gap-2 border-t border-white/10 bg-zinc-950/85 px-4 py-3 backdrop-blur">
+      <div className="sticky bottom-0 -mx-4 flex flex-wrap gap-2 border-t border-white/10 bg-zinc-950/85 px-4 py-3 backdrop-blur rounded-lg">
         <Button onClick={applyBracket} disabled={saving}>
           Aplicar bracket FIFA 2026
         </Button>
-        <Button variant="outline" onClick={clearAll} disabled={saving}>
+        <Button variant="outline" onClick={clearAll} disabled={saving} className="text-black">
           Limpiar
         </Button>
         <Button onClick={save} disabled={saving} className="ml-auto">
