@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
-import { calculatePoints } from "@/lib/scoring";
+import { calculatePoints, resolveFinalScore } from "@/lib/scoring";
 import { isKnockoutStage } from "@/lib/match-constants";
 
 interface ResultPayload {
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await prisma.match.update({
+  const updatedMatch = await prisma.match.update({
     where: { id: matchId },
     data: {
       homeScore,
@@ -95,6 +95,15 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  // Grade against the final scoreline (regulation + extra time). Knockout
+  // matches decided in extra time would otherwise be scored as their 90' draw.
+  const finalScore = resolveFinalScore({
+    homeScore,
+    awayScore,
+    extraTimeHomeScore: updatedMatch.extraTimeHomeScore,
+    extraTimeAwayScore: updatedMatch.extraTimeAwayScore,
+  });
+
   const predictions = await prisma.prediction.findMany({
     where: { matchId },
   });
@@ -102,7 +111,7 @@ export async function POST(req: NextRequest) {
   for (const pred of predictions) {
     const points = calculatePoints(
       { homeScore: pred.homeScore, awayScore: pred.awayScore },
-      { homeScore, awayScore },
+      finalScore,
       config
     );
 
