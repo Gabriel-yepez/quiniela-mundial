@@ -1,5 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { calculatePoints, resolveFinalScore } from "./scoring";
+import {
+  calculatePoints,
+  calculateKnockoutPoints,
+  resolveFinalScore,
+  resolveWinnerSide,
+} from "./scoring";
 
 const cfg = { exactScore: 5, correctWinner: 3, correctDraw: 2 };
 
@@ -121,6 +126,143 @@ describe("calculatePoints", () => {
         extraTimeAwayScore: null,
       });
       expect(result).toEqual({ homeScore: 0, awayScore: 0 });
+    });
+  });
+
+  describe("resolveWinnerSide (knockout always has a winner)", () => {
+    test("home wins on goals (regulation)", () => {
+      expect(resolveWinnerSide({ homeScore: 2, awayScore: 1 })).toBe(1);
+    });
+
+    test("away wins on goals including extra time", () => {
+      expect(
+        resolveWinnerSide({
+          homeScore: 1,
+          awayScore: 1,
+          extraTimeHomeScore: 0,
+          extraTimeAwayScore: 1,
+        })
+      ).toBe(-1);
+    });
+
+    test("home advances on penalties when level after extra time", () => {
+      expect(
+        resolveWinnerSide({
+          homeScore: 1,
+          awayScore: 1,
+          extraTimeHomeScore: 0,
+          extraTimeAwayScore: 0,
+          penaltyHomeScore: 4,
+          penaltyAwayScore: 3,
+        })
+      ).toBe(1);
+    });
+
+    test("away advances on penalties when level after extra time", () => {
+      expect(
+        resolveWinnerSide({
+          homeScore: 0,
+          awayScore: 0,
+          penaltyHomeScore: 2,
+          penaltyAwayScore: 4,
+        })
+      ).toBe(-1);
+    });
+
+    test("returns 0 only when level and no penalties recorded yet", () => {
+      expect(resolveWinnerSide({ homeScore: 1, awayScore: 1 })).toBe(0);
+    });
+  });
+
+  describe("calculateKnockoutPoints", () => {
+    test("draw prediction never scores (no draws in knockout)", () => {
+      // 1-1 decided on penalties for home: predicting 1-1 earns nothing.
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 1, awayScore: 1 },
+          {
+            homeScore: 1,
+            awayScore: 1,
+            penaltyHomeScore: 4,
+            penaltyAwayScore: 3,
+          },
+          cfg
+        )
+      ).toBe(0);
+    });
+
+    test("draw prediction scores 0 even on a decisive scoreline", () => {
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 0, awayScore: 0 },
+          { homeScore: 2, awayScore: 1 },
+          cfg
+        )
+      ).toBe(0);
+    });
+
+    test("backing the penalty winner earns correctWinner", () => {
+      // 1-1, home wins on penalties; user predicted a home win.
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 2, awayScore: 1 },
+          {
+            homeScore: 1,
+            awayScore: 1,
+            penaltyHomeScore: 4,
+            penaltyAwayScore: 3,
+          },
+          cfg
+        )
+      ).toBe(3);
+    });
+
+    test("exact final scoreline including extra time earns exactScore", () => {
+      // 1-1 at 90', 1-0 in extra time -> final 2-1; user predicted 2-1.
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 2, awayScore: 1 },
+          {
+            homeScore: 1,
+            awayScore: 1,
+            extraTimeHomeScore: 1,
+            extraTimeAwayScore: 0,
+          },
+          cfg
+        )
+      ).toBe(5);
+    });
+
+    test("backing the eventual extra-time winner without exact score earns correctWinner", () => {
+      // final 2-1; user predicted 3-0 (home win, not exact).
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 3, awayScore: 0 },
+          {
+            homeScore: 1,
+            awayScore: 1,
+            extraTimeHomeScore: 1,
+            extraTimeAwayScore: 0,
+          },
+          cfg
+        )
+      ).toBe(3);
+    });
+
+    test("backing the wrong side earns 0", () => {
+      // 1-1, home wins on penalties; user predicted an away win.
+      expect(
+        calculateKnockoutPoints(
+          { homeScore: 1, awayScore: 2 },
+          {
+            homeScore: 1,
+            awayScore: 1,
+            penaltyHomeScore: 4,
+            penaltyAwayScore: 3,
+          },
+          cfg
+        )
+      ).toBe(0);
     });
   });
 
