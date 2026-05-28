@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
-import { calculatePoints, resolveFinalScore } from "@/lib/scoring";
+import { calculatePoints, calculateKnockoutPoints } from "@/lib/scoring";
 import { isKnockoutStage } from "@/lib/match-constants";
 
 interface ResultPayload {
@@ -95,25 +95,32 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Grade against the final scoreline (regulation + extra time). Knockout
-  // matches decided in extra time would otherwise be scored as their 90' draw.
-  const finalScore = resolveFinalScore({
-    homeScore,
-    awayScore,
-    extraTimeHomeScore: updatedMatch.extraTimeHomeScore,
-    extraTimeAwayScore: updatedMatch.extraTimeAwayScore,
-  });
-
   const predictions = await prisma.prediction.findMany({
     where: { matchId },
   });
 
   for (const pred of predictions) {
-    const points = calculatePoints(
-      { homeScore: pred.homeScore, awayScore: pred.awayScore },
-      finalScore,
-      config
-    );
+    // Knockout matches always have a winner: grade against the final scoreline
+    // (regulation + extra time) and let penalties break ties. Group matches use
+    // the regulation result, where a draw is a valid outcome.
+    const points = knockout
+      ? calculateKnockoutPoints(
+          { homeScore: pred.homeScore, awayScore: pred.awayScore },
+          {
+            homeScore,
+            awayScore,
+            extraTimeHomeScore: updatedMatch.extraTimeHomeScore,
+            extraTimeAwayScore: updatedMatch.extraTimeAwayScore,
+            penaltyHomeScore: updatedMatch.penaltyHomeScore,
+            penaltyAwayScore: updatedMatch.penaltyAwayScore,
+          },
+          config
+        )
+      : calculatePoints(
+          { homeScore: pred.homeScore, awayScore: pred.awayScore },
+          { homeScore, awayScore },
+          config
+        );
 
     await prisma.prediction.update({
       where: { id: pred.id },
