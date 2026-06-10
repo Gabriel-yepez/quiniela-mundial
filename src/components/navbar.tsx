@@ -175,7 +175,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => signOut()}>
-                  Cerrar sesion
+                  Cerrar sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -185,7 +185,7 @@ export function Navbar() {
                 size="sm"
                 className="border border-neutral-300 bg-gradient-to-b from-white to-neutral-100 text-neutral-900 hover:from-neutral-50 hover:to-neutral-200 text-base px-6 py-4 shadow-sm"
               >
-                Iniciar sesion
+                Iniciar sesión
               </Button>
             </Link>
           )}

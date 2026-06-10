@@ -21,6 +21,7 @@ import {
   STATUS_LABELS,
   isKnockoutStage,
 } from "@/lib/match-constants";
+import { invalidateApiCache } from "@/lib/api-cache";
 
 interface Match {
   id: string;
@@ -65,9 +66,15 @@ const PAGE_SIZE = 10;
 const selectClass =
   "h-9 rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus-visible:border-white/30 focus-visible:ring-3 focus-visible:ring-white/20 [&>option]:bg-zinc-900 [&>option]:text-white";
 
-export function AdminMatchesClient({ matches }: { matches: Match[] }) {
+interface AdminMatchesClientProps {
+  matches: Match[];
+  onReload?: () => Promise<void>;
+}
+
+export function AdminMatchesClient({ matches, onReload }: AdminMatchesClientProps) {
   const [scores, setScores] = useState<Record<string, ScoreState>>({});
   const [loading, setLoading] = useState<string | null>(null);
+  const [editing, setEditing] = useState<Record<string, boolean>>({});
 
   // Filters
   const [filterGroup, setFilterGroup] = useState("all");
@@ -158,6 +165,38 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
     return value === "" ? null : parseInt(value, 10);
   }
 
+  function toInputValue(value: number | null): string {
+    return value === null ? "" : String(value);
+  }
+
+  function startEdit(match: Match) {
+    setScores((prev) => ({
+      ...prev,
+      [match.id]: {
+        home: toInputValue(match.homeScore),
+        away: toInputValue(match.awayScore),
+        etHome: toInputValue(match.extraTimeHomeScore),
+        etAway: toInputValue(match.extraTimeAwayScore),
+        penHome: toInputValue(match.penaltyHomeScore),
+        penAway: toInputValue(match.penaltyAwayScore),
+      },
+    }));
+    setEditing((prev) => ({ ...prev, [match.id]: true }));
+  }
+
+  function cancelEdit(matchId: string) {
+    setEditing((prev) => {
+      const next = { ...prev };
+      delete next[matchId];
+      return next;
+    });
+    setScores((prev) => {
+      const next = { ...prev };
+      delete next[matchId];
+      return next;
+    });
+  }
+
   async function handleSaveResult(match: Match) {
     const s = getScore(match.id);
     if (s.home === "" || s.away === "") {
@@ -217,38 +256,55 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
       }
 
       const data = await res.json();
-      toast.success("Resultado guardado", {
-        description: `Se calificaron ${data.scored} predicciones correctamente.`,
+      const wasEditing = editing[match.id] === true;
+      toast.success(wasEditing ? "Resultado actualizado" : "Resultado guardado", {
+        description: `Se recalcularon ${data.scored} predicciones correctamente.`,
       });
+      cancelEdit(match.id);
+      invalidateApiCache("/api/");
+      await onReload?.();
     } catch {
-      toast.error("Error de conexion", {
-        description: "No se pudo conectar al servidor. Intenta mas tarde.",
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar al servidor. Intenta más tarde.",
       });
     } finally {
       setLoading(null);
     }
   }
 
-  async function handleLock(matchId: string) {
+  async function handleLock(matchId: string, action: "lock" | "unlock") {
     setLoading(matchId);
     try {
       const res = await fetch("/api/admin/matches/lock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId }),
+        body: JSON.stringify({ matchId, action }),
       });
 
       if (!res.ok) {
-        toast.error("Error al bloquear partido", {
-          description: "No se pudo bloquear. Intenta de nuevo.",
-        });
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        toast.error(
+          action === "lock"
+            ? "Error al bloquear partido"
+            : "Error al desbloquear partido",
+          {
+            description:
+              data?.error ?? "No se pudo completar la acción. Intenta de nuevo.",
+          }
+        );
         return;
       }
 
-      toast.success("Partido bloqueado");
+      toast.success(
+        action === "lock" ? "Partido bloqueado" : "Partido desbloqueado"
+      );
+      invalidateApiCache("/api/");
+      await onReload?.();
     } catch {
-      toast.error("Error de conexion", {
-        description: "No se pudo conectar al servidor. Intenta mas tarde.",
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar al servidor. Intenta más tarde.",
       });
     } finally {
       setLoading(null);
@@ -371,6 +427,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                 const s = getScore(match.id);
                 const knockout = isKnockoutStage(match.stage);
                 const isFinished = match.status === "finished";
+                const isEditing = editing[match.id] === true;
                 return (
                   <TableRow key={match.id} className="border-white/10 hover:bg-white/5">
                     <TableCell className="text-white/55">
@@ -420,7 +477,7 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-white">
-                      {isFinished ? (
+                      {isFinished && !isEditing ? (
                         <div className="flex flex-col gap-0.5 text-sm">
                           <span className="font-bold">
                             {match.homeScore} - {match.awayScore}
@@ -519,27 +576,58 @@ export function AdminMatchesClient({ matches }: { matches: Match[] }) {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        {!isFinished && (
-                          <>
-                            <Button
-                              size="sm"
-                              onClick={() => handleSaveResult(match)}
-                              disabled={loading === match.id}
-                            >
-                              Guardar
-                            </Button>
-                            {match.status === "scheduled" && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleLock(match.id)}
-                                disabled={loading === match.id}
-                                className=" text-black"
-                              >
-                                Bloquear
-                              </Button>
-                            )}
-                          </>
+                        {(!isFinished || isEditing) && (
+                          <Button
+                            size="sm"
+                            onClick={() => handleSaveResult(match)}
+                            disabled={loading === match.id}
+                          >
+                            Guardar
+                          </Button>
+                        )}
+                        {isEditing && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => cancelEdit(match.id)}
+                            disabled={loading === match.id}
+                            className="text-white hover:bg-white/10 hover:text-white"
+                          >
+                            Cancelar
+                          </Button>
+                        )}
+                        {isFinished && !isEditing && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => startEdit(match)}
+                            disabled={loading === match.id}
+                            className=" text-black"
+                          >
+                            Editar
+                          </Button>
+                        )}
+                        {match.status === "scheduled" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleLock(match.id, "lock")}
+                            disabled={loading === match.id}
+                            className=" text-black"
+                          >
+                            Bloquear
+                          </Button>
+                        )}
+                        {match.status === "locked" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleLock(match.id, "unlock")}
+                            disabled={loading === match.id}
+                            className=" text-black"
+                          >
+                            Desbloquear
+                          </Button>
                         )}
                       </div>
                     </TableCell>

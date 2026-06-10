@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import type { GroupStanding } from "@/lib/standings";
 import { resolveBracket, type ThirdPlacedRanking } from "@/lib/bracket";
+import { invalidateApiCache } from "@/lib/api-cache";
 
 interface TeamLite {
   id: string;
@@ -155,8 +156,9 @@ export function QualifiersClient({ data }: { data: QualifiersData }) {
         return;
       }
       toast.success(`Clasificados guardados (${json.updated})`);
+      invalidateApiCache("/api/");
     } catch {
-      toast.error("Error de conexion");
+      toast.error("Error de conexión");
     } finally {
       setSaving(false);
     }

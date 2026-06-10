@@ -41,7 +41,7 @@ describe("HomeHero", () => {
     render(<HomeHero />);
 
     expect(screen.getByText("Quiniela Mundial")).toBeInTheDocument();
-    expect(screen.getByText("Quiniela del Mundial de Futbol")).toBeInTheDocument();
+    expect(screen.getByText("Quiniela del Mundial de Fútbol")).toBeInTheDocument();
   });
 
   test("does not render background ownership inside HomeHero anymore", () => {

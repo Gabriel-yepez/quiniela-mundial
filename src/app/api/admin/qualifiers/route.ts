@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -6,6 +7,7 @@ import {
   type StandingTeamInput,
 } from "@/lib/standings";
 import { rankBestThirds } from "@/lib/bracket";
+import { CACHE_TAG_MATCHES } from "@/lib/cached-queries";
 
 export async function GET() {
   const auth = await requireAdmin();
@@ -165,6 +167,8 @@ export async function POST(req: NextRequest) {
       })
     )
   );
+
+  revalidateTag(CACHE_TAG_MATCHES, "max");
 
   return NextResponse.json({ ok: true, updated: body.assignments.length });
 }

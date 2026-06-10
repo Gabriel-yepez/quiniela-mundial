@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiQuery } from "@/lib/api-cache";
 
 gsap.registerPlugin(useGSAP);
 
@@ -26,18 +27,10 @@ interface LeaderboardUser {
 }
 
 export function LeaderboardTable() {
-  const [users, setUsers] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data } = useApiQuery<LeaderboardUser[]>("/api/leaderboard");
+  const loading = data === null;
+  const users = data ?? [];
   const tableRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetch("/api/leaderboard")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      });
-  }, []);
 
   useGSAP(
     () => {
@@ -100,7 +93,7 @@ export function LeaderboardTable() {
   if (users.length === 0) {
     return (
       <p className="text-center text-muted-foreground py-8">
-        Aun no hay predicciones calificadas.
+        Aún no hay predicciones calificadas.
       </p>
     );
   }

@@ -186,7 +186,7 @@ export function MatchCard({ match, prediction, animationIndex = 0 }: MatchCardPr
           {prediction && (
             <div className="mt-3 pt-2 border-t text-center">
               <span className="text-xs text-muted-foreground">
-                Tu prediccion: {prediction.homeScore} - {prediction.awayScore}
+                Tu predicción: {prediction.homeScore} - {prediction.awayScore}
               </span>
               {prediction.points !== null && (
                 <Badge

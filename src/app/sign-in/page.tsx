@@ -69,7 +69,7 @@ export default function SignInPage() {
           return;
         }
 
-        toast.success("Contraseña actualizada. Iniciando sesion...");
+        toast.success("Contraseña actualizada. Iniciando sesión...");
 
         const result = await signIn("credentials", {
           email: form.email,
@@ -78,7 +78,7 @@ export default function SignInPage() {
         });
 
         if (result?.error) {
-          toast.error("Contraseña actualizada, pero hubo un error al iniciar sesion.");
+          toast.error("Contraseña actualizada, pero hubo un error al iniciar sesión.");
           setMode("signin");
           setLoading(false);
           return;
@@ -97,12 +97,12 @@ export default function SignInPage() {
 
         if (!res.ok) {
           const data = await res.json();
-          toast.error(data.error ?? "Error al establecer contrasena");
+          toast.error(data.error ?? "Error al establecer contraseña");
           setLoading(false);
           return;
         }
 
-        toast.success("Contrasena establecida. Iniciando sesion...");
+        toast.success("Contraseña establecida. Iniciando sesión...");
 
         const result = await signIn("credentials", {
           email: form.email,
@@ -111,7 +111,7 @@ export default function SignInPage() {
         });
 
         if (result?.error) {
-          toast.error("Error al iniciar sesion");
+          toast.error("Error al iniciar sesión");
           setLoading(false);
           return;
         }
@@ -136,7 +136,7 @@ export default function SignInPage() {
           return;
         }
 
-        toast.success("Cuenta creada. Iniciando sesion...");
+        toast.success("Cuenta creada. Iniciando sesión...");
       }
 
       const result = await signIn("credentials", {
@@ -157,13 +157,13 @@ export default function SignInPage() {
           setMode("set-password");
           setForm((prev) => ({ ...prev, password: "" }));
           toast.info(
-            "Esta cuenta fue creada con Google. Establece una contrasena para iniciar sesion con email.",
+            "Esta cuenta fue creada con Google. Establece una contraseña para iniciar sesión con email.",
           );
           setLoading(false);
           return;
         }
 
-        toast.error("Correo o contrasena incorrectos", {
+        toast.error("Correo o contraseña incorrectos", {
           description: "Verifica tus credenciales e intenta nuevamente.",
         });
         setLoading(false);
@@ -172,36 +172,36 @@ export default function SignInPage() {
 
       router.push("/matches");
     } catch {
-      toast.error("Error de conexion", {
-        description: "No se pudo conectar al servidor. Intenta mas tarde.",
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar al servidor. Intenta más tarde.",
       });
       setLoading(false);
     }
   }
 
   const titles: Record<Mode, string> = {
-    signin: "Iniciar sesion",
+    signin: "Iniciar sesión",
     register: "Crear cuenta",
-    "set-password": "Establecer contrasena",
+    "set-password": "Establecer contraseña",
     "forgot-password": "Recuperar contraseña",
     "reset-password": "Nueva contraseña",
   };
 
   const descriptions: Record<Mode, string> = {
-    signin: "Inicia sesion para hacer tus predicciones",
-    register: "Registrate para hacer tus predicciones",
+    signin: "Inicia sesión para hacer tus predicciones",
+    register: "Regístrate para hacer tus predicciones",
     "set-password":
-      "Tu cuenta fue creada con Google. Establece una contrasena para poder iniciar sesion con email y contrasena.",
+      "Tu cuenta fue creada con Google. Establece una contraseña para poder iniciar sesión con email y contraseña.",
     "forgot-password": "Ingresa tu correo para restablecer tu contraseña.",
     "reset-password": `Ingresa la nueva contraseña para ${form.email}`,
   };
 
   const buttonLabels: Record<Mode, string> = {
-    signin: "Iniciar sesion",
+    signin: "Iniciar sesión",
     register: "Registrarse",
-    "set-password": "Guardar contrasena e iniciar sesion",
+    "set-password": "Guardar contraseña e iniciar sesión",
     "forgot-password": "Continuar",
-    "reset-password": "Guardar contraseña e iniciar sesion",
+    "reset-password": "Guardar contraseña e iniciar sesión",
   };
 
   const showEmailField = mode === "signin" || mode === "register" || mode === "forgot-password";
@@ -290,7 +290,7 @@ export default function SignInPage() {
                 <Label htmlFor="password">
                   {mode === "set-password" || mode === "reset-password"
                     ? "Nueva contraseña"
-                    : "Contrasena"}
+                    : "Contraseña"}
                 </Label>
                 <Input
                   id="password"
@@ -347,7 +347,7 @@ export default function SignInPage() {
                 }}
                 className="text-sm text-white/70 hover:text-white hover:underline"
               >
-                Volver a iniciar sesion
+                Volver a iniciar sesión
               </button>
             </div>
           )}
@@ -363,8 +363,8 @@ export default function SignInPage() {
                   className="text-sm text-white/70 hover:text-white hover:underline"
                 >
                   {mode === "register"
-                    ? "Ya tienes cuenta? Inicia sesion"
-                    : "No tienes cuenta? Registrate"}
+                    ? "¿Ya tienes cuenta? Inicia sesión"
+                    : "¿No tienes cuenta? Regístrate"}
                 </button>
                 {mode === "signin" && (
                   <button

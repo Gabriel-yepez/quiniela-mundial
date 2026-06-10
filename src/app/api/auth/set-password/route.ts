@@ -7,14 +7,14 @@ export async function POST(req: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { error: "Correo y contrasena son requeridos" },
+      { error: "Correo y contraseña son requeridos" },
       { status: 400 }
     );
   }
 
   if (password.length < 6) {
     return NextResponse.json(
-      { error: "La contrasena debe tener al menos 6 caracteres" },
+      { error: "La contraseña debe tener al menos 6 caracteres" },
       { status: 400 }
     );
   }
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   if (user.password) {
     return NextResponse.json(
-      { error: "Esta cuenta ya tiene contrasena configurada" },
+      { error: "Esta cuenta ya tiene contraseña configurada" },
       { status: 400 }
     );
   }

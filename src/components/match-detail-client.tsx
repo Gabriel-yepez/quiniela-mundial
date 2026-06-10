@@ -198,7 +198,7 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
       {prediction && isFinished && (
         <div className="space-y-1 rounded-lg border border-white/15 bg-white/10 p-4 text-center backdrop-blur-sm">
           <p className="text-sm text-white/65">
-            Tu prediccion: {prediction.homeScore} - {prediction.awayScore}
+            Tu predicción: {prediction.homeScore} - {prediction.awayScore}
           </p>
           <p className="text-lg font-bold">
             {prediction.points !== null

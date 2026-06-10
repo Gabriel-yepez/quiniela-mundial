@@ -4,7 +4,7 @@ export function StructuredData() {
     "@type": "WebApplication",
     name: "Quiniela Mundial",
     description:
-      "Predice los resultados de los 104 partidos del Mundial de Futbol y compite contra otros jugadores.",
+      "Predice los resultados de los 104 partidos del Mundial de Fútbol y compite contra otros jugadores.",
     applicationCategory: "GameApplication",
     operatingSystem: "Web",
     offers: {
@@ -19,7 +19,7 @@ export function StructuredData() {
       endDate: "2026-07-19",
       location: {
         "@type": "Place",
-        name: "Estados Unidos, Mexico y Canada",
+        name: "Estados Unidos, México y Canadá",
       },
     },
   };

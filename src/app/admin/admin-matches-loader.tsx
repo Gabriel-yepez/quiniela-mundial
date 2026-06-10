@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiQuery } from "@/lib/api-cache";
 import { AdminMatchesClient } from "./admin-matches-client";
 
 interface Match {
@@ -25,31 +25,18 @@ interface Match {
 }
 
 export function AdminMatchesLoader() {
-  const [matches, setMatches] = useState<Match[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/admin/matches");
-        if (!res.ok) throw new Error("No se pudieron cargar los partidos");
-        const data: Match[] = await res.json();
-        if (!cancelled) setMatches(data);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Error inesperado");
-        }
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const {
+    data: matches,
+    error,
+    reload,
+  } = useApiQuery<Match[]>("/api/admin/matches");
 
   if (error) {
-    return <p className="py-8 text-center text-white/65">{error}</p>;
+    return (
+      <p className="py-8 text-center text-white/65">
+        No se pudieron cargar los partidos
+      </p>
+    );
   }
 
   if (!matches) {
@@ -62,5 +49,5 @@ export function AdminMatchesLoader() {
     );
   }
 
-  return <AdminMatchesClient matches={matches} />;
+  return <AdminMatchesClient matches={matches} onReload={reload} />;
 }

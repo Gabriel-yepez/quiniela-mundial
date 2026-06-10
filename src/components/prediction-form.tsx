@@ -6,6 +6,7 @@ import { NumberInput } from "@/components/ui/number-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { invalidateApiCache } from "@/lib/api-cache";
 
 interface PredictionFormProps {
   matchId: string;
@@ -51,16 +52,18 @@ export function PredictionForm({
 
       if (!res.ok) {
         const data = await res.json();
-        toast.error(data.error ?? "Error al guardar prediccion", {
+        toast.error(data.error ?? "Error al guardar predicción", {
           description: "Hubo un problema al guardar. Intenta de nuevo.",
         });
         return;
       }
 
-      toast.success("Prediccion guardada correctamente");
+      toast.success("Predicción guardada correctamente");
+      invalidateApiCache("/api/predictions");
+      invalidateApiCache("/api/matches");
     } catch {
-      toast.error("Error de conexion", {
-        description: "No se pudo conectar al servidor. Intenta mas tarde.",
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar al servidor. Intenta más tarde.",
       });
     } finally {
       setLoading(false);
@@ -70,7 +73,7 @@ export function PredictionForm({
   return (
     <Card className="border-zinc-300 bg-zinc-400">
       <CardHeader>
-        <CardTitle className="text-lg">Tu prediccion</CardTitle>
+        <CardTitle className="text-lg">Tu predicción</CardTitle>
       </CardHeader>
       <CardContent>
         {disabled ? (
@@ -99,7 +102,7 @@ export function PredictionForm({
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Guardando..." : "Guardar prediccion"}
+              {loading ? "Guardando..." : "Guardar predicción"}
             </Button>
           </form>
         )}

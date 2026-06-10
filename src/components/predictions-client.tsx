@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiQuery } from "@/lib/api-cache";
 
 interface PredictionRow {
   id: string;
@@ -33,32 +33,13 @@ interface ApiResponse {
 }
 
 export function PredictionsClient() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/predictions");
-        if (!res.ok) throw new Error("No se pudieron cargar tus predicciones");
-        const json: ApiResponse = await res.json();
-        if (!cancelled) setData(json);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Error inesperado");
-        }
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { data, error } = useApiQuery<ApiResponse>("/api/predictions");
 
   if (error) {
     return (
-      <p className="py-12 text-center text-white/65">{error}</p>
+      <p className="py-12 text-center text-white/65">
+        No se pudieron cargar tus predicciones
+      </p>
     );
   }
 
@@ -86,7 +67,7 @@ export function PredictionsClient() {
 
       {predictions.length === 0 ? (
         <p className="py-12 text-center text-white/60">
-          Aun no has hecho predicciones. Ve a la seccion de partidos para
+          Aún no has hecho predicciones. Ve a la sección de partidos para
           comenzar.
         </p>
       ) : (
@@ -96,7 +77,7 @@ export function PredictionsClient() {
               <TableRow>
                 <TableHead className="text-white/70">#</TableHead>
                 <TableHead className="text-white/70">Partido</TableHead>
-                <TableHead className="text-center text-white/70">Tu prediccion</TableHead>
+                <TableHead className="text-center text-white/70">Tu predicción</TableHead>
                 <TableHead className="text-center text-white/70">Resultado</TableHead>
                 <TableHead className="text-right text-white/70">Puntos</TableHead>
               </TableRow>
