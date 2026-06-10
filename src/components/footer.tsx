@@ -58,7 +58,7 @@ export function Footer() {
                   href="/sign-in"
                   className="text-white/60 transition-colors hover:text-white"
                 >
-                  Iniciar sesion
+                  Iniciar sesión
                 </Link>
               </li>
             </ul>
@@ -70,7 +70,7 @@ export function Footer() {
               11 de junio &mdash; 19 de julio, 2026
             </p>
             <p className="mt-1 text-sm text-white/60">
-              USA, Mexico y Canada
+              USA, México y Canadá
             </p>
           </div>
         </div>

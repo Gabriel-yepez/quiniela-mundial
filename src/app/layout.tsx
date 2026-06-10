@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     template: "%s | Quiniela Mundial",
   },
   description:
-    "Participa en la quiniela del Mundial de Futbol 2026. Predice marcadores de los 104 partidos, compite contra amigos y escala en el ranking. USA, Mexico y Canada.",
+    "Participa en la quiniela del Mundial de Fútbol 2026. Predice marcadores de los 104 partidos, compite contra amigos y escala en el ranking. Estados Unidos, México y Canadá.",
   keywords: [
     "quiniela",
     "mundial 2026",
-    "predicciones futbol",
+    "predicciones fútbol",
     "world cup 2026",
     "FIFA",
-    "pronosticos",
+    "pronósticos",
     "marcadores",
     "copa del mundo",
   ],

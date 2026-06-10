@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import {
@@ -14,6 +14,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag } from "@/components/flag";
 import { cn } from "@/lib/utils";
+import { useApiQuery } from "@/lib/api-cache";
 
 gsap.registerPlugin(useGSAP);
 
@@ -52,29 +53,8 @@ function positionAccent(position: number) {
 }
 
 export function GroupsTable() {
-  const [groups, setGroups] = useState<GroupPayload[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { data: groups, error } = useApiQuery<GroupPayload[]>("/api/groups");
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/groups")
-      .then((res) => {
-        if (!res.ok) throw new Error("No se pudieron cargar los grupos");
-        return res.json();
-      })
-      .then((data: GroupPayload[]) => {
-        if (!cancelled) setGroups(data);
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Error inesperado");
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useGSAP(
     () => {
@@ -98,7 +78,7 @@ export function GroupsTable() {
   if (error) {
     return (
       <p className="rounded-2xl border border-white/12 bg-white/5 px-6 py-12 text-center text-white/70 backdrop-blur-sm">
-        {error}
+        No se pudieron cargar los grupos
       </p>
     );
   }
@@ -116,7 +96,7 @@ export function GroupsTable() {
   if (groups.length === 0) {
     return (
       <p className="rounded-2xl border border-white/12 bg-white/5 px-6 py-12 text-center text-white/70 backdrop-blur-sm">
-        Aun no hay grupos para mostrar.
+        Aún no hay grupos para mostrar.
       </p>
     );
   }

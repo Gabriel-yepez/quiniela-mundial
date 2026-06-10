@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Quiniela Mundial",
     short_name: "Quiniela",
     description:
-      "Predice los resultados del Mundial de Futbol y compite contra amigos.",
+      "Predice los resultados del Mundial de Fútbol y compite contra amigos.",
     start_url: "/",
     display: "standalone",
     background_color: "#f8f8f8",

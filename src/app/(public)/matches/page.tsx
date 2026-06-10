@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { MatchesClient } from "@/components/matches-client";
 import { JsonLd } from "@/components/json-ld";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://quiniela-mundial.vercel.app";
@@ -47,7 +49,17 @@ export default async function MatchesPage() {
     <div className="mx-auto min-h-[calc(100vh-4rem)] max-w-6xl px-4 py-8 text-white">
       <JsonLd data={itemList} />
       <h1 className="mb-6 text-3xl font-semibold tracking-tight text-white">Partidos</h1>
-      <MatchesClient />
+      <Suspense
+        fallback={
+          <div className="space-y-3">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+        }
+      >
+        <MatchesClient />
+      </Suspense>
     </div>
   );
 }

@@ -67,7 +67,7 @@ export function HomeHero() {
         </h1>
 
         <p className="hero-subtitle text-xl font-medium text-white/65 sm:text-2xl">
-          Quiniela del Mundial de Futbol
+          Quiniela del Mundial de Fútbol
         </p>
 
         <div className="hero-countdown">
@@ -75,7 +75,7 @@ export function HomeHero() {
         </div>
 
         <p className="hero-date text-sm text-white/45">
-          11 de junio - 19 de julio, 2026 &middot; USA, Mexico y Canada
+          11 de junio de 2026 · Estados Unidos, México y Canadá
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

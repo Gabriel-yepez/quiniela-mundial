@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
+import {
+  CACHE_TAG_SCORING,
+  getCachedScoringConfig,
+} from "@/lib/cached-queries";
 
 export async function GET() {
-  const config = await prisma.scoringConfig.findFirst();
+  const config = await getCachedScoringConfig();
   return NextResponse.json(config);
 }
 
@@ -14,17 +19,16 @@ export async function PUT(req: NextRequest) {
   const { exactScore, correctWinner, correctDraw } = await req.json();
 
   const existing = await prisma.scoringConfig.findFirst();
-  if (!existing) {
-    const config = await prisma.scoringConfig.create({
-      data: { exactScore, correctWinner, correctDraw },
-    });
-    return NextResponse.json(config);
-  }
+  const config = existing
+    ? await prisma.scoringConfig.update({
+        where: { id: existing.id },
+        data: { exactScore, correctWinner, correctDraw },
+      })
+    : await prisma.scoringConfig.create({
+        data: { exactScore, correctWinner, correctDraw },
+      });
 
-  const config = await prisma.scoringConfig.update({
-    where: { id: existing.id },
-    data: { exactScore, correctWinner, correctDraw },
-  });
+  revalidateTag(CACHE_TAG_SCORING, "max");
 
   return NextResponse.json(config);
 }

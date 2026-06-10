@@ -22,7 +22,7 @@ export async function generateMetadata({
   const home = match.homeTeam?.name ?? "Por definir";
   const away = match.awayTeam?.name ?? "Por definir";
   const title = `${home} vs ${away}`;
-  const description = `Partido #${match.matchNumber} del Mundial. ${home} vs ${away} en ${match.venue}. Haz tu prediccion y acumula puntos.`;
+  const description = `Partido #${match.matchNumber} del Mundial. ${home} vs ${away} en ${match.venue}. Haz tu predicción y acumula puntos.`;
 
   return {
     title,

@@ -1,35 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiQuery } from "@/lib/api-cache";
 import { QualifiersClient, type QualifiersData } from "./qualifiers-client";
 
 export function QualifiersLoader() {
-  const [data, setData] = useState<QualifiersData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/admin/qualifiers");
-        if (!res.ok) throw new Error("No se pudieron cargar los clasificados");
-        const json: QualifiersData = await res.json();
-        if (!cancelled) setData(json);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Error inesperado");
-        }
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { data, error } = useApiQuery<QualifiersData>("/api/admin/qualifiers");
 
   if (error) {
-    return <p className="py-8 text-center text-white/65">{error}</p>;
+    return (
+      <p className="py-8 text-center text-white/65">
+        No se pudieron cargar los clasificados
+      </p>
+    );
   }
   if (!data) {
     return (

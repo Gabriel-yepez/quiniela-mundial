@@ -1,27 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useApiQuery } from "@/lib/api-cache";
+
+interface ScoringConfigPayload {
+  exactScore: number;
+  correctWinner: number;
+  correctDraw: number;
+}
+
+const DEFAULT_CONFIG: ScoringConfigPayload = {
+  exactScore: 5,
+  correctWinner: 3,
+  correctDraw: 2,
+};
 
 export default function RulesPage() {
-  const [config, setConfig] = useState({
-    exactScore: 5,
-    correctWinner: 3,
-    correctDraw: 2,
-  });
+  const { data } = useApiQuery<ScoringConfigPayload | null>(
+    "/api/admin/scoring"
+  );
+  const config = data ?? DEFAULT_CONFIG;
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetch("/api/admin/scoring")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) setConfig(data);
-      })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -97,10 +100,10 @@ export default function RulesPage() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold text-zinc-900">
                   1
                 </span>
-                <h3 className="font-semibold text-white">Registrate</h3>
+                <h3 className="font-semibold text-white">Regístrate</h3>
               </div>
               <p className="text-sm text-white/65">
-                Crea tu cuenta con correo y contrasena o inicia sesion con
+                Crea tu cuenta con correo y contraseña o inicia sesión con
                 Google para comenzar a participar.
               </p>
             </CardContent>
@@ -116,7 +119,7 @@ export default function RulesPage() {
               </div>
               <p className="text-sm text-white/65">
                 Entra a cada partido y predice el marcador final (goles local
-                y visitante). Puedes modificar tu prediccion hasta que el
+                y visitante). Puedes modificar tu predicción hasta que el
                 partido sea bloqueado.
               </p>
             </CardContent>
@@ -131,8 +134,8 @@ export default function RulesPage() {
                 <h3 className="font-semibold text-white">Espera los resultados</h3>
               </div>
               <p className="text-sm text-white/65">
-                Cuando el partido finalice, el administrador registrara el
-                marcador real y el sistema calculara automaticamente tus
+                Cuando el partido finalice, el administrador registrará el
+                marcador real y el sistema calculará automáticamente tus
                 puntos.
               </p>
             </CardContent>
@@ -176,7 +179,7 @@ export default function RulesPage() {
               <div className="text-4xl font-bold text-white/90">{config.correctWinner}</div>
               <div className="text-sm font-semibold text-white">Ganador correcto</div>
               <p className="text-xs text-white/65">
-                Acertaste quien gano el partido pero no el marcador exacto.
+                Acertaste quién ganó el partido pero no el marcador exacto.
               </p>
             </CardContent>
           </Card>
@@ -186,7 +189,7 @@ export default function RulesPage() {
               <div className="text-4xl font-bold text-white/80">{config.correctDraw}</div>
               <div className="text-sm font-semibold text-white">Empate correcto</div>
               <p className="text-xs text-white/65">
-                Predijiste empate y el partido termino en empate, pero con
+                Predijiste empate y el partido terminó en empate, pero con
                 diferente marcador.
               </p>
             </CardContent>
@@ -215,10 +218,10 @@ export default function RulesPage() {
               <table className="w-full text-sm text-white">
                 <thead>
                   <tr className="border-b border-white/10 bg-white/6">
-                    <th className="p-3 text-left font-medium">Tu prediccion</th>
+                    <th className="p-3 text-left font-medium">Tu predicción</th>
                     <th className="p-3 text-left font-medium">Resultado real</th>
                     <th className="p-3 text-left font-medium">Puntos</th>
-                    <th className="p-3 text-left font-medium">Razon</th>
+                    <th className="p-3 text-left font-medium">Razón</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,7 +271,7 @@ export default function RulesPage() {
                     <td className="p-3">
                       <Badge className="border border-white/18 bg-white/16 text-white hover:bg-white/16">0</Badge>
                     </td>
-                    <td className="p-3 text-white/65">Predijiste local, gano visitante</td>
+                    <td className="p-3 text-white/65">Predijiste local, ganó visitante</td>
                   </tr>
                 </tbody>
               </table>
@@ -287,8 +290,8 @@ export default function RulesPage() {
                 Programado
               </Badge>
               <p className="text-sm text-white/65">
-                El partido aun no inicia. Puedes crear o modificar tu
-                prediccion libremente.
+                El partido aún no inicia. Puedes crear o modificar tu
+                predicción libremente.
               </p>
             </CardContent>
           </Card>
@@ -299,8 +302,8 @@ export default function RulesPage() {
                 Bloqueado
               </Badge>
               <p className="text-sm text-white/65">
-                El partido esta a punto de iniciar o ya inicio. Las
-                predicciones estan cerradas y ya no se pueden modificar.
+                El partido está a punto de iniciar o ya inició. Las
+                predicciones están cerradas y ya no se pueden modificar.
               </p>
             </CardContent>
           </Card>
@@ -311,8 +314,8 @@ export default function RulesPage() {
                 Finalizado
               </Badge>
               <p className="text-sm text-white/65">
-                El partido termino. El resultado ya fue registrado y tus
-                puntos fueron calculados automaticamente.
+                El partido terminó. El resultado ya fue registrado y tus
+                puntos fueron calculados automáticamente.
               </p>
             </CardContent>
           </Card>
@@ -335,21 +338,21 @@ export default function RulesPage() {
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 shrink-0 text-white/45">&#9679;</span>
                 <span>
-                  Si no estas seguro del marcador, al menos intenta acertar
+                  Si no estás seguro del marcador, al menos intenta acertar
                   al ganador para obtener puntos parciales.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 shrink-0 text-white/45">&#9679;</span>
                 <span>
-                  No olvides hacer tu prediccion antes de que el partido sea
-                  bloqueado, ya que despues no podras modificarla.
+                  No olvides hacer tu predicción antes de que el partido sea
+                  bloqueado, ya que después no podrás modificarla.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 shrink-0 text-white/45">&#9679;</span>
                 <span>
-                  Puedes cambiar tu prediccion cuantas veces quieras mientras
+                  Puedes cambiar tu predicción cuantas veces quieras mientras
                   el partido siga en estado &quot;Programado&quot;.
                 </span>
               </li>

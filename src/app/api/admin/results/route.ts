@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth-server";
 import { prisma } from "@/lib/prisma";
 import { calculatePoints, calculateKnockoutPoints } from "@/lib/scoring";
 import { isKnockoutStage } from "@/lib/match-constants";
+import {
+  CACHE_TAG_LEADERBOARD,
+  CACHE_TAG_MATCHES,
+} from "@/lib/cached-queries";
 
 interface ResultPayload {
   matchId: string;
@@ -77,7 +82,7 @@ export async function POST(req: NextRequest) {
   const config = await prisma.scoringConfig.findFirst();
   if (!config) {
     return NextResponse.json(
-      { error: "Configuracion de puntos no encontrada" },
+      { error: "Configuración de puntos no encontrada" },
       { status: 500 }
     );
   }
@@ -127,6 +132,9 @@ export async function POST(req: NextRequest) {
       data: { points },
     });
   }
+
+  revalidateTag(CACHE_TAG_MATCHES, "max");
+  revalidateTag(CACHE_TAG_LEADERBOARD, "max");
 
   return NextResponse.json({ success: true, scored: predictions.length });
 }

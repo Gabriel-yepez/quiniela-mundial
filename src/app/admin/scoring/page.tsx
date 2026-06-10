@@ -24,7 +24,7 @@ export default function ScoringPage() {
         }
       })
       .catch(() => {
-        toast.error("Error al cargar configuracion", {
+        toast.error("Error al cargar configuración", {
           description: "No se pudieron cargar los puntos actuales.",
         });
       });
@@ -45,16 +45,16 @@ export default function ScoringPage() {
       });
 
       if (!res.ok) {
-        toast.error("Error al guardar configuracion", {
+        toast.error("Error al guardar configuración", {
           description: "No se pudieron guardar los puntos. Intenta de nuevo.",
         });
         return;
       }
 
-      toast.success("Configuracion de puntos actualizada");
+      toast.success("Configuración de puntos actualizada");
     } catch {
-      toast.error("Error de conexion", {
-        description: "No se pudo conectar al servidor. Intenta mas tarde.",
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar al servidor. Intenta más tarde.",
       });
     } finally {
       setLoading(false);
@@ -66,11 +66,11 @@ export default function ScoringPage() {
       <div className="grid items-start gap-8 md:grid-cols-2">
         <div className="max-w-xl">
           <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
-            Configuracion de Puntos
+            Configuración de Puntos
           </h2>
           <p className="text-sm text-white/65">
-            Define cuantos puntos otorga cada tipo de acierto al calificar las
-            predicciones de los usuarios. Estos valores se aplican automaticamente
+            Define cuántos puntos otorga cada tipo de acierto al calificar las
+            predicciones de los usuarios. Estos valores se aplican automáticamente
             cuando guardas el resultado de un partido.
           </p>
         </div>
@@ -120,7 +120,7 @@ export default function ScoringPage() {
           </div>
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Guardando..." : "Guardar configuracion"}
+            {loading ? "Guardando..." : "Guardar configuración"}
           </Button>
         </form>
         </CardContent>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MatchCard } from "@/components/match-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiQuery } from "@/lib/api-cache";
 
 interface Team {
   name: string;
@@ -43,45 +44,20 @@ const STAGE_LABELS: Record<string, string> = {
 };
 
 export function MatchesClient() {
-  const [matches, setMatches] = useState<MatchPayload[] | null>(null);
-  const [predictions, setPredictions] = useState<PredictionPayload[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const matchesRes = await fetch("/api/matches");
-        if (!matchesRes.ok) throw new Error("No se pudieron cargar los partidos");
-        const matchesData: MatchPayload[] = await matchesRes.json();
-
-        let predictionsData: PredictionPayload[] = [];
-        const predRes = await fetch("/api/predictions");
-        if (predRes.ok) {
-          const data = await predRes.json();
-          predictionsData = data.predictions ?? [];
-        }
-
-        if (!cancelled) {
-          setMatches(matchesData);
-          setPredictions(predictionsData);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Error inesperado");
-        }
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Both queries run in parallel; predictions are optional (401 when logged out).
+  const { data: matches, error } = useApiQuery<MatchPayload[]>("/api/matches");
+  const { data: predictionsData } = useApiQuery<{
+    predictions: PredictionPayload[];
+  }>("/api/predictions");
+  const predictions = predictionsData?.predictions ?? [];
 
   if (error) {
     return (
       <div className="rounded-2xl border border-white/12 bg-white/10 px-6 py-12 text-center text-white/65 backdrop-blur-sm">
-        {error}
+        No se pudieron cargar los partidos
       </div>
     );
   }
@@ -112,16 +88,30 @@ export function MatchesClient() {
   ];
   const defaultTab = tabs[0]?.key;
 
+  // The active tab lives in the URL (?tab=B) so browser back/forward
+  // restores the group the user was viewing.
+  const tabParam = searchParams.get("tab");
+  const activeTab =
+    tabParam !== null && tabs.some((t) => t.key === tabParam)
+      ? tabParam
+      : defaultTab;
+
+  function handleTabChange(value: string) {
+    const params = new URLSearchParams(searchParams);
+    params.set("tab", value);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }
+
   if (tabs.length === 0) {
     return (
       <div className="rounded-2xl border border-white/12 bg-white/10 px-6 py-12 text-center text-white/65 backdrop-blur-sm">
-        No hay partidos disponibles todavia.
+        No hay partidos disponibles todavía.
       </div>
     );
   }
 
   return (
-    <Tabs defaultValue={defaultTab}>
+    <Tabs value={activeTab} onValueChange={handleTabChange}>
       <div className="-mx-4 mb-6 overflow-x-auto px-4 pb-1 [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent">
         <TabsList className="inline-flex h-auto w-max flex-nowrap gap-1 rounded-2xl border border-white/12 bg-white/10 p-1 backdrop-blur-sm">
           {tabs.map((tab) => (
