@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { normalizeEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
-  const { name, email, password } = await req.json();
+  const { name, email: rawEmail, password } = await req.json();
 
-  if (!email || !password) {
+  if (!rawEmail || !password) {
     return NextResponse.json(
       { error: "Email y contraseña son requeridos" },
       { status: 400 }
@@ -18,6 +19,8 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+
+  const email = normalizeEmail(rawEmail as string);
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
