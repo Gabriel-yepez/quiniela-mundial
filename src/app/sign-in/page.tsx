@@ -255,6 +255,8 @@ export default function SignInPage() {
                   type="email"
                   placeholder="correo@ejemplo.com"
                   required
+                  pattern="[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}"
+                  title="Ingresa un correo valido, por ejemplo: correo@ejemplo.com"
                   value={form.email}
                   onChange={(e) =>
                     setForm({ ...form, email: e.target.value })

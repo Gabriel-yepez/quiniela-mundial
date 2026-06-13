@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { normalizeEmail } from "@/lib/email";
+import { normalizeEmail, isValidEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
@@ -9,6 +9,13 @@ export async function POST(req: NextRequest) {
   if (!email || !password) {
     return NextResponse.json(
       { error: "Correo y contraseña son requeridos" },
+      { status: 400 }
+    );
+  }
+
+  if (!isValidEmail(email as string)) {
+    return NextResponse.json(
+      { error: "El formato del correo no es válido" },
       { status: 400 }
     );
   }
