@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { normalizeEmail, isValidEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
@@ -12,6 +13,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  if (!isValidEmail(email as string)) {
+    return NextResponse.json(
+      { error: "El formato del correo no es válido" },
+      { status: 400 }
+    );
+  }
+
   if (password.length < 6) {
     return NextResponse.json(
       { error: "La contraseña debe tener al menos 6 caracteres" },
@@ -20,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { email: normalizeEmail(email as string) },
     select: { id: true, password: true, accounts: { where: { provider: "google" } } },
   });
 
