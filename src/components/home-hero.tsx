@@ -58,7 +58,7 @@ export function HomeHero() {
   return (
     <div
       ref={heroRef}
-      className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden px-4"
+      className="relative flex min-h-[calc(100dvh-4rem)] flex-col items-center justify-center overflow-hidden px-4"
     >
       {/* Content */}
       <div className="relative z-10 max-w-lg space-y-8 text-center">

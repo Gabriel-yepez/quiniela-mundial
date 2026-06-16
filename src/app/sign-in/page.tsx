@@ -210,7 +210,7 @@ export default function SignInPage() {
   const showBackLink = mode === "set-password" || mode === "forgot-password" || mode === "reset-password";
 
   return (
-    <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
+    <div className="grid min-h-[calc(100dvh-4rem)] lg:grid-cols-2">
       <div className="hidden items-center justify-center p-6 sm:p-10 lg:flex lg:p-12">
         <div className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-xl border border-white/12 shadow-lg ring-1 ring-white/10">
           <Image
