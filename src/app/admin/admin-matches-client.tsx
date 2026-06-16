@@ -408,8 +408,8 @@ export function AdminMatchesClient({ matches, onReload }: AdminMatchesClientProp
           <TableHeader>
             <TableRow className="border-white/10 hover:bg-transparent">
               <TableHead className="w-12 text-white/70">#</TableHead>
-              <TableHead className="text-white/70">Partido</TableHead>
-              <TableHead className="text-white/70">Grupo</TableHead>
+              <TableHead className="text-white/70 min-w-[300px]">Partido</TableHead>
+              <TableHead className="text-white/70 hidden sm:table-cell">Grupo</TableHead>
               <TableHead className="text-white/70">Estado</TableHead>
               <TableHead className="text-white/70">Resultado</TableHead>
               <TableHead className="text-white/70">Acciones</TableHead>
@@ -433,28 +433,39 @@ export function AdminMatchesClient({ matches, onReload }: AdminMatchesClientProp
                     <TableCell className="text-white/55">
                       {match.matchNumber}
                     </TableCell>
-                    <TableCell className="font-medium whitespace-nowrap text-white">
-                      <div className="flex items-center gap-1.5">
-                        {match.homeTeam && (
-                          <Flag
-                            url={match.homeTeam.flagUrl}
-                            code={match.homeTeam.code}
-                            alt={match.homeTeam.name}
-                          />
-                        )}
-                        {match.homeTeam?.code ?? "TBD"}
-                        <span className="text-white/55">vs</span>
-                        {match.awayTeam && (
-                          <Flag
-                            url={match.awayTeam.flagUrl}
-                            code={match.awayTeam.code}
-                            alt={match.awayTeam.name}
-                          />
-                        )}
-                        {match.awayTeam?.code ?? "TBD"}
+                    <TableCell className="font-medium text-white">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {match.homeTeam && (
+                            <Flag
+                              url={match.homeTeam.flagUrl}
+                              code={match.homeTeam.code}
+                              alt={match.homeTeam.name}
+                            />
+                          )}
+                          {match.homeTeam?.code ?? "TBD"}
+                          <span className="text-white/55">vs</span>
+                          {match.awayTeam && (
+                            <Flag
+                              url={match.awayTeam.flagUrl}
+                              code={match.awayTeam.code}
+                              alt={match.awayTeam.name}
+                            />
+                          )}
+                          {match.awayTeam?.code ?? "TBD"}
+                        </div>
+                        <div className="sm:hidden">
+                          {match.group ? (
+                            <Badge className="text-white" variant="outline">Grupo {match.group}</Badge>
+                          ) : (
+                            <Badge variant="secondary">
+                              {STAGE_LABELS[match.stage] ?? match.stage}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       {match.group ? (
                         <Badge className="text-white" variant="outline">Grupo {match.group}</Badge>
                       ) : (
@@ -575,7 +586,7 @@ export function AdminMatchesClient({ matches, onReload }: AdminMatchesClientProp
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 flex-wrap">
                         {(!isFinished || isEditing) && (
                           <Button
                             size="sm"
