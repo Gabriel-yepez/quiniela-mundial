@@ -62,7 +62,7 @@ export default function ScoringPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <div className="grid items-start gap-8 md:grid-cols-2">
         <div className="max-w-xl">
           <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">

@@ -46,7 +46,7 @@ export default async function MatchesPage() {
   };
 
   return (
-    <div className="mx-auto min-h-[calc(100vh-4rem)] max-w-6xl px-4 py-8 text-white">
+    <div className="mx-auto min-h-[calc(100dvh-4rem)] max-w-6xl px-4 py-8 text-white">
       <JsonLd data={itemList} />
       <h1 className="mb-6 text-3xl font-semibold tracking-tight text-white">Partidos</h1>
       <Suspense

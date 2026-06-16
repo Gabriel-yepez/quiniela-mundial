@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function GroupsPage() {
   return (
-    <div className="mx-auto min-h-[calc(100vh-4rem)] max-w-6xl px-4 py-8 text-white">
+    <div className="mx-auto min-h-[calc(100dvh-4rem)] max-w-6xl px-4 py-8 text-white">
       <div className="mb-6 space-y-2">
         <h1 className="text-3xl font-semibold tracking-tight text-white">
           Grupos

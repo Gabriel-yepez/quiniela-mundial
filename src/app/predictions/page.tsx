@@ -15,7 +15,7 @@ export default async function PredictionsPage() {
   if (!session?.user) redirect("/sign-in");
 
   return (
-    <div className="mx-auto min-h-[calc(100vh-4rem)] max-w-4xl px-4 py-8 text-white">
+    <div className="mx-auto min-h-[calc(100dvh-4rem)] max-w-4xl px-4 py-8 text-white">
       <PredictionsClient />
     </div>
   );

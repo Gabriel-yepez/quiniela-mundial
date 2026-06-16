@@ -58,7 +58,7 @@ export function Navbar() {
   return (
     <nav
       ref={navRef}
-      className="border-b border-black/5 bg-white/80 text-neutral-900 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
+      className="sticky top-0 z-50 border-b border-black/5 bg-white/80 text-neutral-900 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
     >
       <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
         <div className="flex items-center gap-6">

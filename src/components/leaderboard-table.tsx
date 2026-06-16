@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import {
@@ -13,9 +14,22 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useApiQuery } from "@/lib/api-cache";
 
 gsap.registerPlugin(useGSAP);
+
+const PAGE_SIZE = 10;
+
+/** Normaliza para buscar sin distinguir mayúsculas ni acentos. */
+function normalizeForSearch(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim();
+}
 
 interface LeaderboardUser {
   rank: number;
@@ -29,8 +43,35 @@ interface LeaderboardUser {
 export function LeaderboardTable() {
   const { data } = useApiQuery<LeaderboardUser[]>("/api/leaderboard");
   const loading = data === null;
-  const users = data ?? [];
+  const users = useMemo(() => data ?? [], [data]);
   const tableRef = useRef<HTMLDivElement>(null);
+
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  // Jugadores fuera del podio (rank 4+), sobre los que aplica buscador y paginación.
+  const rest = useMemo(() => users.slice(3), [users]);
+
+  const filtered = useMemo(() => {
+    const term = normalizeForSearch(search);
+    if (!term) return rest;
+    return rest.filter((user) =>
+      normalizeForSearch(user.name ?? "Anonimo").includes(term)
+    );
+  }, [rest, search]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // Si la página actual quedó fuera de rango tras filtrar, mostramos la última válida.
+  const currentPage = Math.min(page, pageCount);
+  const visible = filtered.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
 
   useGSAP(
     () => {
@@ -77,7 +118,11 @@ export function LeaderboardTable() {
         }
       );
     },
-    { scope: tableRef, dependencies: [users.length], revertOnUpdate: true }
+    {
+      scope: tableRef,
+      dependencies: [users.length, currentPage, search],
+      revertOnUpdate: true,
+    }
   );
 
   if (loading) {
@@ -99,7 +144,6 @@ export function LeaderboardTable() {
   }
 
   const podium = users.slice(0, 3);
-  const rest = users.slice(3);
   const podiumOrder: LeaderboardUser[] = [];
   if (podium[1]) podiumOrder.push(podium[1]);
   if (podium[0]) podiumOrder.push(podium[0]);
@@ -116,43 +160,93 @@ export function LeaderboardTable() {
       )}
 
       {rest.length > 0 && (
-        <div className="rounded-2xl border border-white/12 bg-white/10 p-2 backdrop-blur-sm">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16 text-white/70">#</TableHead>
-                <TableHead className="text-white/70">Jugador</TableHead>
-                <TableHead className="text-right text-white/70">Predicciones</TableHead>
-                <TableHead className="text-right text-white/70">Puntos</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rest.map((user) => (
-                <TableRow key={user.id} className="leaderboard-row border-white/10 text-white">
-                  <TableCell className="font-bold text-white">{user.rank}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <AvatarImage src={user.image ?? ""} />
-                        <AvatarFallback className="bg-white/15 text-xs text-white">
-                          {user.name?.charAt(0)?.toUpperCase() ?? "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium text-white">
-                        {user.name ?? "Anonimo"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {user.totalPredictions}
-                  </TableCell>
-                  <TableCell className="text-right font-bold">
-                    {user.totalPoints}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="space-y-3">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+            <Input
+              type="search"
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Buscar jugador..."
+              aria-label="Buscar jugador"
+              className="border-white/12 bg-white/10 pl-9 text-white placeholder:text-white/50"
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <p className="py-8 text-center text-sm text-white/60">
+              No se encontraron jugadores.
+            </p>
+          ) : (
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-2 backdrop-blur-sm">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-16 text-white/70">#</TableHead>
+                    <TableHead className="text-white/70">Jugador</TableHead>
+                    <TableHead className="text-right text-white/70">Predicciones</TableHead>
+                    <TableHead className="text-right text-white/70">Puntos</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {visible.map((user) => (
+                    <TableRow key={user.id} className="leaderboard-row border-white/10 text-white">
+                      <TableCell className="font-bold text-white">{user.rank}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-7 w-7">
+                            <AvatarImage src={user.image ?? ""} />
+                            <AvatarFallback className="bg-white/15 text-xs text-white">
+                              {user.name?.charAt(0)?.toUpperCase() ?? "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm font-medium text-white">
+                            {user.name ?? "Anonimo"}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {user.totalPredictions}
+                      </TableCell>
+                      <TableCell className="text-right font-bold">
+                        {user.totalPoints}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {pageCount > 1 && (
+            <div className="flex items-center justify-between gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={currentPage <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="gap-1 border-white/12 bg-white/10 text-white hover:bg-white/20"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Anterior
+              </Button>
+              <span className="text-sm text-white/65">
+                Página {currentPage} de {pageCount}
+              </span>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={currentPage >= pageCount}
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                className="gap-1 border-white/12 bg-white/10 text-white hover:bg-white/20"
+              >
+                Siguiente
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
