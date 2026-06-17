@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag } from "@/components/flag";
 import { cn } from "@/lib/utils";
@@ -45,6 +47,7 @@ interface GroupPayload {
 
 const QUALIFIED_DIRECT = 2;
 const QUALIFIED_PLAYOFF = 3;
+const PAGE_SIZE = 4;
 
 function positionAccent(position: number) {
   if (position <= QUALIFIED_DIRECT) return "bg-emerald-400";
@@ -55,10 +58,19 @@ function positionAccent(position: number) {
 export function GroupsTable() {
   const { data: groups, error } = useApiQuery<GroupPayload[]>("/api/groups");
   const containerRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(1);
+
+  const pageCount = Math.max(1, Math.ceil((groups?.length ?? 0) / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pagedGroups =
+    groups?.slice(
+      (currentPage - 1) * PAGE_SIZE,
+      currentPage * PAGE_SIZE
+    ) ?? [];
 
   useGSAP(
     () => {
-      if (!groups?.length) return;
+      if (!pagedGroups.length) return;
       gsap.fromTo(
         ".group-card",
         { opacity: 0, y: 16 },
@@ -72,7 +84,7 @@ export function GroupsTable() {
         }
       );
     },
-    { scope: containerRef, dependencies: [groups?.length] }
+    { scope: containerRef, dependencies: [currentPage, groups?.length] }
   );
 
   if (error) {
@@ -105,10 +117,40 @@ export function GroupsTable() {
     <div ref={containerRef} className="space-y-6">
       <Legend />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {groups.map((group) => (
+        {pagedGroups.map((group) => (
           <GroupCard key={group.group} group={group} />
         ))}
       </div>
+
+      {pageCount > 1 && (
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={currentPage <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="gap-1 border-white/12 bg-white/10 text-white hover:bg-white/20"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
+          </Button>
+          <span className="text-sm text-white/65">
+            Página {currentPage} de {pageCount}
+          </span>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={currentPage >= pageCount}
+            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            className="gap-1 border-white/12 bg-white/10 text-white hover:bg-white/20"
+          >
+            Siguiente
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
