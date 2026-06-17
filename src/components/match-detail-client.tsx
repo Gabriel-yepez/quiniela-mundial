@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag } from "@/components/flag";
 import { PredictionForm } from "@/components/prediction-form";
+import { MatchOtherPredictions } from "@/components/match-other-predictions";
 
 interface Team {
   name: string;
@@ -207,6 +208,8 @@ export function MatchDetailClient({ matchId }: { matchId: string }) {
           </p>
         </div>
       )}
+
+      <MatchOtherPredictions matchId={match.id} matchStatus={match.status} />
     </>
   );
 }
